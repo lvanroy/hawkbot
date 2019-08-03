@@ -1,3 +1,0 @@
-CREATE ROLE hawk WITH LOGIN PASSWORD 'admin';
-ALTER ROLE hawk CREATEDB;
-CREATE DATABASE shadowhawks owner hawk;
