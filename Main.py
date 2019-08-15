@@ -3,12 +3,12 @@ import random
 import asyncio
 
 from BossTimers import initialise_timers, print_timers
-from GearTracker import GearTracker
+from UserTracker import UserTracker
 from discord.utils import get
 
 token = "NjA0ODYxOTI5NTQ2MzE3ODI2.XT_VGA.diM8D5Ksr2bTv44_VgxdOXLD_o8"
 
-gear_tracker = None
+user_tracker = None
 
 client = discord.Client()
 loop = asyncio.new_event_loop()
@@ -20,8 +20,8 @@ async def on_ready():
     bot_channel = client.get_channel(605023656132739110)
     initialise_timers(bot_channel)
 
-    global gear_tracker
-    gear_tracker = GearTracker()
+    global user_tracker
+    user_tracker = UserTracker()
 
     print("Good to go!!")
 
@@ -46,14 +46,20 @@ async def on_message(message):
     if str(message.channel) == "botspam":
         # give the users an option to see which commands are available
         if message.content == "!help":
-            output = "Use the following commands to set respective gear variables:\n" + \
-                     "!gear set ap <value>\n" + \
-                     "!gear set aap <value>\n" + \
-                     "!gear set dp <value>\n" + \
-                     "Use the following commands to see the current timers:\n" + \
+            output = "Use the following commands to make and or delete toons:\n" \
+                     "!toons add <name> <class>\n" \
+                     "!toons remove <name>\n" \
+                     "\nUse the following commands to set respective gear variables:\n" + \
+                     "!gear set ap <value> <toon>\n" + \
+                     "!gear set aap <value> <toon>\n" + \
+                     "!gear set dp <value> <toon>\n" \
+                     "\n use the following commands to see the history for a given toon or character\n" \
+                     "!toonhistory <toon>\n" \
+                     "!charhistory <character>\n" + \
+                     "\nUse the following commands to see the current timers:\n" + \
                      "!bosstimer <boss>" \
                      " (boss tag is optional, if no tag is given, the timers for all bosses will be given)\n" + \
-                     "\ngeneral non bdo related commands:\n" + \
+                     "\nGeneral non bdo related commands:\n" + \
                      "!dice <lower> <upper> (these bounds are optional)"
             await message.channel.send(output)
             return
@@ -65,10 +71,36 @@ async def on_message(message):
         # -----------------------------------------------------------------------------------------
         elif message.content.startswith("!toons add "):
             arguments = message.content.split(" ")
+            channel = message.channel
+            if len(arguments) == 5:
+                arguments[-2] = arguments[-2] + " " + arguments[-1]
+                arguments.pop()
             if len(arguments) == 4:
                 toon_name = arguments[2]
                 toon_class = arguments[3]
+                print(toon_class)
+                user = message.author
+                if toon_class not in ["Warrior",     "Ranger",  "Sorceress", "Berserker",
+                                      "Valkyrie",    "Wizard",  "Witch",     "Tamer",
+                                      "Maehwa",      "Musa",    "Ninja",     "Kunoichi",
+                                      "Striker",     "Mystic",  "Lahn",      "Archer",
+                                      "Dark Knight", "Shai"]:
+                    await channel.send("Error, that class does not exist. "
+                                       "All classes need to start with capital letters.")
+                    return
+                user_tracker.add_toon(user, toon_name, toon_class, channel)
+            else:
+                await alert_for_incorrect_format(channel)
 
+        elif message.content.startswith("!toons remove "):
+            arguments = message.content.split(" ")
+            channel = message.channel
+            if len(arguments) == 3:
+                toon_name = arguments[2]
+                user = message.author
+                user_tracker.remove_toon(user, toon_name, channel)
+            else:
+                await alert_for_incorrect_format(channel)
 
         # -----------------------------------------------------------------------------------------
         # Gear commands
@@ -77,35 +109,57 @@ async def on_message(message):
         # as help us properly organise events, and notify the proper people for those events
         # -----------------------------------------------------------------------------------------
         elif message.content.startswith("!gear set ap "):
-            arguments = message.conent.split("!gear set ap ")
+            arguments = message.content.split(" ")
             channel = message.channel
-            if len(arguments) == 2:
-                ap = arguments[1]
-                user = message.author
-                gear_tracker.set_ap(ap, user, channel)
+            if len(arguments) == 5:
+                toon = arguments[-1]
+                ap = arguments[-2]
+                user_tracker.set_ap(ap, toon, channel)
             else:
                 await alert_for_incorrect_format(channel)
             return
         elif message.content.startswith("!gear set aap "):
-            arguments = message.content.split("!gear set aap")
+            arguments = message.content.split(" ")
             channel = message.channel
-            if len(arguments) == 2:
-                aap = arguments[1]
-                user = message.author
-                gear_tracker.set_aap(aap, user, channel)
+            if len(arguments) == 5:
+                aap = arguments[-2]
+                toon = arguments[-1]
+                user_tracker.set_aap(aap, toon, channel)
             else:
                 await alert_for_incorrect_format(channel)
             return
         elif message.content.startswith("!gear set dp "):
-            arguments = message.content.split("!gear set dp ")
+            arguments = message.content.split(" ")
             channel = message.channel
-            if len(arguments) == 2:
-                dp = arguments[1]
-                user = message.author
-                gear_tracker.set_dp(dp, user, channel)
+            if len(arguments) == 5:
+                toon = arguments[-1]
+                dp = arguments[-2]
+                user_tracker.set_dp(dp, toon, channel)
             else:
                 await alert_for_incorrect_format(channel)
             return
+
+        # -----------------------------------------------------------------------------------------
+        # History commands
+        # these commands let players access the history of their account/toons
+        # the history lists all changes in stats
+        # the history will list at most the 20 most recent events
+        # -----------------------------------------------------------------------------------------
+        elif message.content.startswith("!toonhistory "):
+            arguments = message.content.split(" ")
+            channel = message.channel
+            if len(arguments) == 2:
+                toon = arguments[1]
+                user_tracker.get_toon_history(toon, channel)
+            else:
+                await alert_for_incorrect_format(channel)
+            return
+        elif message.content.startswith("!charhistory "):
+            arguments = message.content.split(" ")
+            channel = message.channel
+            if len(arguments) == 2:
+                user = arguments[1]
+                user_tracker.get_character_history(user, channel)
 
         # -----------------------------------------------------------------------------------------
         # Timer commands
