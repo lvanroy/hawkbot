@@ -1,6 +1,7 @@
 import discord
 import random
 import asyncio
+import sys
 
 from BossTimers import initialise_timers, print_timers
 from GearTracker import GearTracker
@@ -54,7 +55,9 @@ async def on_message(message):
                      "!bosstimer <boss>" \
                      " (boss tag is optional, if no tag is given, the timers for all bosses will be given)\n" + \
                      "\ngeneral non bdo related commands:\n" + \
-                     "!dice <lower> <upper> (these bounds are optional)"
+                     "!dice <lower> <upper> (these bounds are optional)\n" + \
+                     "\nthe following command gives a link to the bots github:\n" + \
+                     "!discord"
             await message.channel.send(output)
             return
 
@@ -135,6 +138,12 @@ async def on_message(message):
                 number = await random.randint(int(lower), int(upper))
             await message.channel.send(number)
             return
+
+        elif message.content.startswith("!discord"):
+            await message.channel.send("https://github.com/larsVanRoy/hawkbot")
+
+        elif message.content.startswith("!stop") and message.author.name == "badoody(OfTheImpossibru)":
+            await client.close()
 
         elif message.content.startswith("!"):
             output = "Command not recognized, use !help to get a list of available commands!"
