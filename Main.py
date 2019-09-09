@@ -1,7 +1,6 @@
 import discord
 import random
 import asyncio
-import sys
 
 from BossTimers import initialise_timers, print_timers
 from UserTracker import UserTracker
