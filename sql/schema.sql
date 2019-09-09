@@ -1,35 +1,42 @@
 BEGIN;
 
 CREATE TABLE Users(
-	id varchar PRIMARY KEY,
-	username VARCHAR
+	id VARCHAR PRIMARY KEY,
+	username VARCHAR NOT NULL
 );
 
 CREATE TABLE Toons(
-  id varchar,
-  name VARCHAR,
-  class VARCHAR,
-  PRIMARY KEY (id, name)
+  id varchar NOT NULL,
+  name VARCHAR PRIMARY KEY,
+  class VARCHAR NOT NULL
 );
 
 CREATE TABLE Gear(
-  id varchar PRIMARY KEY,
-  dp INT,
-  ap INT,
-  aap INT
+  toon VARCHAR PRIMARY KEY,
+  dp INT NOT NULL,
+  ap INT NOT NULL,
+  aap INT NOT NULL
 );
 
 CREATE TABLE Skills(
-  id varchar PRIMARY KEY,
-  fishing INT,
-  trading INT,
-  gathering INT,
-  training INT,
-  farming INT,
-  cooking INT,
-  alchemy INT,
-  sailing INT,
-  hunting INT
+  id VARCHAR PRIMARY KEY,
+  fishing INT NOT NULL,
+  trade INT NOT NULL,
+  gathering INT NOT NULL,
+  training INT NOT NULL,
+  farming INT NOT NULL,
+  cooking INT NOT NULL,
+  alchemy INT NOT NULL,
+  sailing INT NOT NULL,
+  hunting INT NOT NULL,
+  processing INT NOT NULL
+);
+
+CREATE TABLE History(
+  toon VARCHAR PRIMARY KEY,
+  event_date DATE NOT NULL,
+  stat VARCHAR NOT NULL,
+  amount INT NOT NULL
 );
 
 COMMIT;
