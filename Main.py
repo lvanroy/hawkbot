@@ -46,26 +46,56 @@ async def on_message(message):
     if str(message.channel) == "botspam":
         # give the users an option to see which commands are available
         if message.content == "!help":
-            output = "Use the following commands to make and or delete toons:\n" \
-                     "!toons add <name> <class>\n" \
-                     "!toons remove <name>\n" \
+            output = "Use the following commands to make and or delete families:\n" \
+                     "!family add <name>\n" \
+                     "!family remove <name>\n" \
+                     "\nUse the following commands to make and or delete toons:\n" \
+                     "!toons add <name> <family> <class>\n" \
+                     "!toons remove <name> <family>\n" \
                      "\nUse the following commands to set respective gear variables:\n" + \
                      "!gear set ap <value> <toon>\n" + \
                      "!gear set aap <value> <toon>\n" + \
                      "!gear set dp <value> <toon>\n" \
                      "\n use the following commands to see the history for a given toon or character\n" \
                      "!toonhistory <toon>\n" \
-                     "!charhistory <character>\n" + \
+                     "!familyhistory <family>\n" + \
                      "\nUse the following commands to see the current timers:\n" + \
-                     "!bosstimer <boss>" \
+                     "!bosstimers <boss>" \
                      " (boss tag is optional, if no tag is given, the timers for all bosses will be given)\n" + \
                      "\ngeneral non bdo related commands:\n" + \
                      "!dice <lower> <upper> (these bounds are optional)\n" + \
+                     "!praise\n" + \
                      "\nthe following command gives a link to the bots github:\n" + \
                      "!discord"
 
             await message.channel.send(output)
             return
+
+        # -----------------------------------------------------------------------------------------
+        # Family commands
+        # these commands are used to manage the different families linked for a user,
+        # one can add, display and remove families
+        # families are linked to the created, and can therefore only be deleted by the creation user
+        # -----------------------------------------------------------------------------------------
+        elif message.content.startswith("!family add "):
+            arguments = message.content.split(" ")
+            channel = message.channel
+            if len(arguments) == 3:
+                family_name = arguments[2]
+                user = message.author
+                user_tracker.add_family(user, family_name, channel)
+            else:
+                await alert_for_incorrect_format(channel)
+
+        elif message.content.startswith("!family remove "):
+            arguments = message.content.split(" ")
+            channel = message.channel
+            if len(arguments) == 3:
+                family_name = arguments[2]
+                user = message.author
+                user_tracker.remove_family(user, family_name, channel)
+            else:
+                await alert_for_incorrect_format(channel)
 
         # -----------------------------------------------------------------------------------------
         # Toon commands
@@ -75,13 +105,13 @@ async def on_message(message):
         elif message.content.startswith("!toons add "):
             arguments = message.content.split(" ")
             channel = message.channel
-            if len(arguments) == 5:
+            if len(arguments) == 6:
                 arguments[-2] = arguments[-2] + " " + arguments[-1]
                 arguments.pop()
-            if len(arguments) == 4:
+            if len(arguments) == 5:
                 toon_name = arguments[2]
-                toon_class = arguments[3]
-                print(toon_class)
+                toon_family = arguments[3]
+                toon_class = arguments[4]
                 user = message.author
                 if toon_class not in ["Warrior",     "Ranger",  "Sorceress", "Berserker",
                                       "Valkyrie",    "Wizard",  "Witch",     "Tamer",
@@ -91,17 +121,18 @@ async def on_message(message):
                     await channel.send("Error, that class does not exist. "
                                        "All classes need to start with capital letters.")
                     return
-                user_tracker.add_toon(user, toon_name, toon_class, channel)
+                user_tracker.add_toon(user, toon_name, toon_family, toon_class, channel)
             else:
                 await alert_for_incorrect_format(channel)
 
         elif message.content.startswith("!toons remove "):
             arguments = message.content.split(" ")
             channel = message.channel
-            if len(arguments) == 3:
+            if len(arguments) == 4:
                 toon_name = arguments[2]
+                toon_family = arguments[3]
                 user = message.author
-                user_tracker.remove_toon(user, toon_name, channel)
+                user_tracker.remove_toon(user, toon_name, toon_family, channel)
             else:
                 await alert_for_incorrect_format(channel)
 
@@ -160,12 +191,15 @@ async def on_message(message):
                 await alert_for_incorrect_format(channel)
             return
 
-        elif message.content.startswith("!charhistory "):
+        elif message.content.startswith("!familyhistory "):
             arguments = message.content.split(" ")
             channel = message.channel
             if len(arguments) == 2:
-                user = arguments[1]
-                user_tracker.get_character_history(user, channel)
+                family = arguments[1]
+                user_tracker.get_family_history(family, channel)
+            else:
+                await alert_for_incorrect_format(channel)
+            return
 
         # -----------------------------------------------------------------------------------------
         # Timer commands
@@ -199,6 +233,9 @@ async def on_message(message):
             else:
                 await alert_for_incorrect_format(message.channel)
             return
+
+        elif message.content.startswith("!praise"):
+            await message.channel.send("<@194853137096376320> Thank you for all the effort! Love the bot!")
 
         elif message.content.startswith("!discord"):
             await message.channel.send("https://github.com/larsVanRoy/hawkbot")

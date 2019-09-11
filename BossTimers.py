@@ -12,6 +12,17 @@ def check_advanced_notice():
     timers["general"] = Timer(60, check_advanced_notice)
     timers["general"].start()
 
+    mapping = {
+        "Karanda": "<@&605835920477913090>",
+        "Kutum": "<@&605835798901817354>",
+        "Kzarka": "<@&605835785907863601>",
+        "Offin": "<@&605835946184802304>",
+        "Nouver": "<@&605835974693617664>",
+        "Garmoth": "<@&605836079504818176>",
+        "Quint And Muraka": "<@&605836116033273858>",
+        "Vell": "<@&605836162824929280>"
+    }
+
     for key in remaining_time.keys():
         elapsed_time = floor(time.time() - start_time[key])
         elapsed_hours = floor(elapsed_time/60/60)
@@ -29,15 +40,15 @@ def check_advanced_notice():
             minutes = 60 + minutes
 
         if hours == 0 and minutes == 30 and channel is not None:
-            asyncio.ensure_future(channel.send("@{0} {0} will spawn in 30 minutes!".format(key)))
+            asyncio.ensure_future(channel.send("{} {} will spawn in 30 minutes!".format(mapping[key], key)))
 
         elif hours == 0 and minutes == 5 and channel is not None:
-            asyncio.ensure_future(channel.send("@{0} {0} will spawn in 5 minutes!".format(key)))
+            asyncio.ensure_future(channel.send("{} {} will spawn in 5 minutes!".format(mapping[key], key)))
 
 
 def notify_karanda():
     if channel is not None:
-        asyncio.ensure_future(channel.send("@Karanda Karanda has spawned!"))
+        asyncio.ensure_future(channel.send("<@&605835920477913090> Karanda has spawned!"))
 
     current_time = get_curent_time()
 
@@ -51,7 +62,7 @@ def notify_karanda():
 
 def notify_kutum():
     if channel is not None:
-        asyncio.ensure_future(channel.send("@Kutum Kutum has spawned!"))
+        asyncio.ensure_future(channel.send("<@&605835798901817354> Kutum has spawned!"))
 
     current_time = get_curent_time()
 
@@ -65,7 +76,7 @@ def notify_kutum():
 
 def notify_kzarka():
     if channel is not None:
-        asyncio.ensure_future(channel.send("@Kzarka Kzarka has spawned!"))
+        asyncio.ensure_future(channel.send("<@&605835785907863601> Kzarka has spawned!"))
 
     current_time = get_curent_time()
 
@@ -79,7 +90,7 @@ def notify_kzarka():
 
 def notify_offin():
     if channel is not None:
-        asyncio.ensure_future(channel.send("@Offin Offin has spawned!"))
+        asyncio.ensure_future(channel.send("<@&605835946184802304> Offin has spawned!"))
 
     current_time = get_curent_time()
 
@@ -93,7 +104,7 @@ def notify_offin():
 
 def notify_nouver():
     if channel is not None:
-        asyncio.ensure_future(channel.send("@Nouver Nouver has spawned!"))
+        asyncio.ensure_future(channel.send("<@&605835974693617664> Nouver has spawned!"))
 
     current_time = get_curent_time()
 
@@ -107,7 +118,7 @@ def notify_nouver():
 
 def notify_garmoth():
     if channel is not None:
-        asyncio.ensure_future(channel.send("@Garmoth Garmoth has spawned!"))
+        asyncio.ensure_future(channel.send("<@&605836079504818176> Garmoth has spawned!"))
 
     current_time = get_curent_time()
 
@@ -121,7 +132,7 @@ def notify_garmoth():
 
 def notify_quint_and_muraka():
     if channel is not None:
-        asyncio.ensure_future(channel.send("@Quint/Muraka Quint and Muraka have spawned!"))
+        asyncio.ensure_future(channel.send("<@&605836116033273858> Quint and Muraka have spawned!"))
 
     current_time = get_curent_time()
 
@@ -135,7 +146,7 @@ def notify_quint_and_muraka():
 
 def notify_vell():
     if channel is not None:
-        asyncio.ensure_future(channel.send("@Vell Vell has spawned"))
+        asyncio.ensure_future(channel.send("<@&605836162824929280> Vell has spawned"))
 
     current_time = get_curent_time()
 
@@ -279,6 +290,7 @@ async def print_timers(boss=None):
             output += "{} will spawn in {}:{}:{}\n".format(key, hours, minutes, seconds)
             print("{} will spawn in {}:{}:{}".format(key, hours, minutes, seconds))
     else:
+        boss = boss[0].capitalize() + boss[1:]
         elapsed_time = floor(time.time() - start_time[boss])
         elapsed_hours = floor(elapsed_time / 60 / 60)
         elapsed_minutes = floor(elapsed_time / 60) % 60

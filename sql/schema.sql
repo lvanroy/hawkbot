@@ -1,42 +1,44 @@
 BEGIN;
 
-CREATE TABLE Users(
-	id VARCHAR PRIMARY KEY,
-	username VARCHAR NOT NULL
+CREATE TABLE Families(
+	id VARCHAR NOT NULL,
+	family VARCHAR PRIMARY KEY
 );
 
 CREATE TABLE Toons(
-  id varchar NOT NULL,
   name VARCHAR PRIMARY KEY,
+  family varchar NOT NULL REFERENCES Families ON DELETE CASCADE,
   class VARCHAR NOT NULL
 );
 
 CREATE TABLE Gear(
-  toon VARCHAR PRIMARY KEY,
+  toon VARCHAR PRIMARY KEY REFERENCES Toons ON DELETE CASCADE,
   dp INT NOT NULL,
   ap INT NOT NULL,
   aap INT NOT NULL
 );
 
 CREATE TABLE Skills(
-  id VARCHAR PRIMARY KEY,
-  fishing INT NOT NULL,
-  trade INT NOT NULL,
+  toon VARCHAR PRIMARY KEY REFERENCES Toons ON DELETE CASCADE,
   gathering INT NOT NULL,
-  training INT NOT NULL,
-  farming INT NOT NULL,
+  fishing INT NOT NULL,
+  hunting INT NOT NULL,
   cooking INT NOT NULL,
   alchemy INT NOT NULL,
-  sailing INT NOT NULL,
-  hunting INT NOT NULL,
-  processing INT NOT NULL
+  processing INT NOT NULL,
+  training INT NOT NULL,
+  trade INT NOT NULL,
+  farming INT NOT NULL,
+  sailing INT NOT NULL
 );
 
 CREATE TABLE History(
-  toon VARCHAR PRIMARY KEY,
+  toon VARCHAR REFERENCES Toons ON DELETE CASCADE,
   event_date DATE NOT NULL,
+  event_time TIME NOT NULL,
   stat VARCHAR NOT NULL,
-  amount INT NOT NULL
+  amount INT NOT NULL,
+  PRIMARY KEY (toon, event_date, event_time)
 );
 
 COMMIT;
