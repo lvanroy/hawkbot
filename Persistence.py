@@ -4,7 +4,7 @@ import psycopg2
 class Persistence:
     def __init__(self):
         try:
-            self.connection = psycopg2.connect(user="Hawk",
+            self.connection = psycopg2.connect(user="hawk",
                                                password="hawk",
                                                host="127.0.0.1",
                                                port="5432",

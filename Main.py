@@ -121,6 +121,7 @@ async def on_message(message):
             else:
                 await alert_for_incorrect_format(channel)
             return
+
         elif message.content.startswith("!gear set aap "):
             arguments = message.content.split(" ")
             channel = message.channel
@@ -131,6 +132,7 @@ async def on_message(message):
             else:
                 await alert_for_incorrect_format(channel)
             return
+
         elif message.content.startswith("!gear set dp "):
             arguments = message.content.split(" ")
             channel = message.channel
@@ -157,6 +159,7 @@ async def on_message(message):
             else:
                 await alert_for_incorrect_format(channel)
             return
+
         elif message.content.startswith("!charhistory "):
             arguments = message.content.split(" ")
             channel = message.channel
