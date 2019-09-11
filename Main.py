@@ -187,13 +187,17 @@ async def on_message(message):
         # these commands are not necessarily game related, but are mostly for fun
         # ------------------------------------------------------------------------------------------
         elif message.content.startswith("!dice"):
-            number = await random.randint(0, 2000000000)
             arguments = message.content.split(" ")
-            if len(arguments) >= 3:
+            if len(arguments) == 3:
                 lower = arguments[1]
                 upper = arguments[2]
-                number = await random.randint(int(lower), int(upper))
-            await message.channel.send(number)
+                number = random.randint(int(lower), int(upper))
+                await message.channel.send(number)
+            elif len(arguments) == 1:
+                number = random.randint(0, 2000000000)
+                await message.channel.send(number)
+            else:
+                await alert_for_incorrect_format(message.channel)
             return
 
         elif message.content.startswith("!discord"):
