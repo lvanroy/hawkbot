@@ -6,7 +6,8 @@ from BossTimers import initialise_timers, print_timers
 from UserTracker import UserTracker
 from discord.utils import get
 
-token = "NjA0ODYxOTI5NTQ2MzE3ODI2.XT_VGA.diM8D5Ksr2bTv44_VgxdOXLD_o8"
+f = open("token.txt", 'r')
+token = f.read().split("\n")[0]
 
 user_tracker = None
 
@@ -66,7 +67,7 @@ async def on_message(message):
                      "!dice <lower> <upper> (these bounds are optional)\n" + \
                      "!praise\n" + \
                      "\nthe following command gives a link to the bots github:\n" + \
-                     "!discord"
+                     "!github"
 
             await message.channel.send(output)
             return
@@ -237,7 +238,7 @@ async def on_message(message):
         elif message.content.startswith("!praise"):
             await message.channel.send("<@194853137096376320> Thank you for all the effort! Love the bot!")
 
-        elif message.content.startswith("!discord"):
+        elif message.content.startswith("!github"):
             await message.channel.send("https://github.com/larsVanRoy/hawkbot")
 
         elif message.content.startswith("!stop") and message.author.name == "badoody(OfTheImpossibru)":
