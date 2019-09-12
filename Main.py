@@ -56,7 +56,7 @@ async def on_message(message):
                      "!gear set ap <value> <toon>\n" + \
                      "!gear set aap <value> <toon>\n" + \
                      "!gear set dp <value> <toon>\n" \
-                     "\n use the following commands to see the history for a given toon or character\n" \
+                     "\n use the following commands to see the history for a given toon or family\n" \
                      "!toonhistory <toon>\n" \
                      "!familyhistory <family>\n" + \
                      "\nUse the following commands to see the current timers:\n" + \
