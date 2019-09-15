@@ -39,16 +39,19 @@ def check_advanced_notice():
             hours -= 1
             minutes = 60 + minutes
 
+        if hours == 60 and minutes == 0 and channel is not None:
+            asyncio.run_coroutine_threadsafe(channel.send("{} {} will spawn in 60 minutes!".format(mapping[key], key)), loop)
+
         if hours == 0 and minutes == 30 and channel is not None:
-            asyncio.ensure_future(channel.send("{} {} will spawn in 30 minutes!".format(mapping[key], key)))
+            asyncio.run_coroutine_threadsafe(channel.send("{} {} will spawn in 30 minutes!".format(mapping[key], key)), loop)
 
         elif hours == 0 and minutes == 5 and channel is not None:
-            asyncio.ensure_future(channel.send("{} {} will spawn in 5 minutes!".format(mapping[key], key)))
+            asyncio.run_coroutine_threadsafe(channel.send("{} {} will spawn in 5 minutes!".format(mapping[key], key)), loop)
 
 
 def notify_karanda():
     if channel is not None:
-        asyncio.ensure_future(channel.send("<@&605835920477913090> Karanda has spawned!"))
+        asyncio.run_coroutine_threadsafe(channel.send("<@&605835920477913090> Karanda has spawned!"), loop)
 
     current_time = get_curent_time()
 
@@ -62,7 +65,7 @@ def notify_karanda():
 
 def notify_kutum():
     if channel is not None:
-        asyncio.ensure_future(channel.send("<@&605835798901817354> Kutum has spawned!"))
+        asyncio.run_coroutine_threadsafe(channel.send("<@&605835798901817354> Kutum has spawned!"))
 
     current_time = get_curent_time()
 
@@ -76,7 +79,7 @@ def notify_kutum():
 
 def notify_kzarka():
     if channel is not None:
-        asyncio.ensure_future(channel.send("<@&605835785907863601> Kzarka has spawned!"))
+        asyncio.run_coroutine_threadsafe(channel.send("<@&605835785907863601> Kzarka has spawned!"))
 
     current_time = get_curent_time()
 
@@ -104,7 +107,7 @@ def notify_offin():
 
 def notify_nouver():
     if channel is not None:
-        asyncio.ensure_future(channel.send("<@&605835974693617664> Nouver has spawned!"))
+        asyncio.run_coroutine_threadsafe(channel.send("<@&605835974693617664> Nouver has spawned!"), loop)
 
     current_time = get_curent_time()
 
@@ -118,7 +121,7 @@ def notify_nouver():
 
 def notify_garmoth():
     if channel is not None:
-        asyncio.ensure_future(channel.send("<@&605836079504818176> Garmoth has spawned!"))
+        asyncio.run_coroutine_threadsafe(channel.send("<@&605836079504818176> Garmoth has spawned!"), loop)
 
     current_time = get_curent_time()
 
@@ -132,7 +135,7 @@ def notify_garmoth():
 
 def notify_quint_and_muraka():
     if channel is not None:
-        asyncio.ensure_future(channel.send("<@&605836116033273858> Quint and Muraka have spawned!"))
+        asyncio.run_coroutine_threadsafe(channel.send("<@&605836116033273858> Quint and Muraka have spawned!"), loop)
 
     current_time = get_curent_time()
 
@@ -146,7 +149,7 @@ def notify_quint_and_muraka():
 
 def notify_vell():
     if channel is not None:
-        asyncio.ensure_future(channel.send("<@&605836162824929280> Vell has spawned"))
+        asyncio.run_coroutine_threadsafe(channel.send("<@&605836162824929280> Vell has spawned"), loop)
 
     current_time = get_curent_time()
 
@@ -182,6 +185,8 @@ start_time = dict()
 
 channel = None
 
+loop = asyncio.new_event_loop()
+asyncio.set_event_loop(loop)
 
 def initialise_timers(bot_channel):
     global channel
@@ -288,7 +293,6 @@ async def print_timers(boss=None):
                 minutes = 60 + minutes
 
             output += "{} will spawn in {}:{}:{}\n".format(key, hours, minutes, seconds)
-            print("{} will spawn in {}:{}:{}".format(key, hours, minutes, seconds))
     else:
         boss = boss[0].capitalize() + boss[1:]
         elapsed_time = floor(time.time() - start_time[boss])
