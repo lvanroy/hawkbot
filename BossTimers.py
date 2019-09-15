@@ -9,7 +9,7 @@ import asyncio
 # initialise the boss spawn timers, these timers will cause notifications to all subscribed members
 # half an hour in advance and when the boss has acc spawned
 def check_advanced_notice():
-    timers["general"] = Timer(60, check_advanced_notice)
+    timers["general"] = Timer(40, check_advanced_notice)
     timers["general"].start()
 
     mapping = {
@@ -194,7 +194,7 @@ def initialise_timers(bot_channel):
 
     current_time = get_curent_time()
 
-    general = Timer(60, check_advanced_notice)
+    general = Timer(40, check_advanced_notice)
     general.start()
     timers["general"] = general
 
