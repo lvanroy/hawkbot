@@ -65,7 +65,7 @@ def notify_karanda():
 
 def notify_kutum():
     if channel is not None:
-        asyncio.run_coroutine_threadsafe(channel.send("<@&605835798901817354> Kutum has spawned!"))
+        asyncio.run_coroutine_threadsafe(channel.send("<@&605835798901817354> Kutum has spawned!"), loop)
 
     current_time = get_curent_time()
 
@@ -79,7 +79,7 @@ def notify_kutum():
 
 def notify_kzarka():
     if channel is not None:
-        asyncio.run_coroutine_threadsafe(channel.send("<@&605835785907863601> Kzarka has spawned!"))
+        asyncio.run_coroutine_threadsafe(channel.send("<@&605835785907863601> Kzarka has spawned!"), loop)
 
     current_time = get_curent_time()
 
@@ -93,7 +93,7 @@ def notify_kzarka():
 
 def notify_offin():
     if channel is not None:
-        asyncio.ensure_future(channel.send("<@&605835946184802304> Offin has spawned!"))
+        asyncio.run_coroutine_threadsafe(channel.send("<@&605835946184802304> Offin has spawned!"), loop)
 
     current_time = get_curent_time()
 
