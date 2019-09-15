@@ -257,7 +257,7 @@ async def on_message(message):
         # give the users an option to see which commands are available
         if message.content == "!help":
             output = "This channel is used to request roles.\nAll roles can be requested by using the " \
-                     "!assing <role> command.\nWe currently support the following roles: \n" \
+                     "!assign <role> command.\nWe currently support the following roles: \n" \
                      "Kzarka\n" \
                      "Kutum\n" \
                      "Karanda\n" \
