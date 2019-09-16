@@ -40,13 +40,16 @@ def check_advanced_notice():
             minutes = 60 + minutes
 
         if hours == 60 and minutes == 0 and channel is not None:
-            asyncio.run_coroutine_threadsafe(channel.send("{} {} will spawn in 60 minutes!".format(mapping[key], key)), loop)
+            asyncio.run_coroutine_threadsafe(
+                channel.send("{} {} will spawn in 60 minutes!".format(mapping[key], key)), loop)
 
         if hours == 0 and minutes == 30 and channel is not None:
-            asyncio.run_coroutine_threadsafe(channel.send("{} {} will spawn in 30 minutes!".format(mapping[key], key)), loop)
+            asyncio.run_coroutine_threadsafe(
+                channel.send("{} {} will spawn in 30 minutes!".format(mapping[key], key)), loop)
 
         elif hours == 0 and minutes == 5 and channel is not None:
-            asyncio.run_coroutine_threadsafe(channel.send("{} {} will spawn in 5 minutes!".format(mapping[key], key)), loop)
+            asyncio.run_coroutine_threadsafe(
+                channel.send("{} {} will spawn in 5 minutes!".format(mapping[key], key)), loop)
 
 
 def notify_karanda():
@@ -188,6 +191,7 @@ channel = None
 loop = asyncio.new_event_loop()
 asyncio.set_event_loop(loop)
 
+
 def initialise_timers(bot_channel):
     global channel
     channel = bot_channel
@@ -317,9 +321,9 @@ async def print_timers(boss=None):
 
 def get_curent_time():
     now = datetime.utcnow()
-    weekday = datetime.utcnow().weekday()*24*60*60
+    weekday = now.weekday()*24*60*60
     hours = (int(now.strftime("%H"))+2)*60*60
     minutes = int(now.strftime("%M"))*60
     seconds = int(now.strftime("%S"))
-    current_time = weekday + hours + minutes + seconds
+    current_time = (weekday + hours + minutes + seconds) % 604800
     return current_time
