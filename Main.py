@@ -18,7 +18,7 @@ asyncio.set_event_loop(loop)
 
 @client.event
 async def on_ready():
-    bot_channel = client.get_channel(605023656132739110)
+    bot_channel = client.get_channel(623893978273808404)
     initialise_timers(bot_channel)
 
     global user_tracker
