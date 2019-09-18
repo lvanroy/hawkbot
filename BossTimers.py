@@ -39,17 +39,20 @@ def check_advanced_notice():
             hours -= 1
             minutes = 60 + minutes
 
-        if hours == 60 and minutes == 0 and channel is not None:
+        if hours == 1 and minutes == 0 and channel is not None and not notified[key][0]:
             asyncio.run_coroutine_threadsafe(
                 channel.send("{} {} will spawn in 60 minutes!".format(mapping[key], key)), loop)
+            notified[key][0] = True
 
-        if hours == 0 and minutes == 30 and channel is not None:
+        if hours == 0 and minutes == 30 and channel is not None and not notified[key][1]:
             asyncio.run_coroutine_threadsafe(
                 channel.send("{} {} will spawn in 30 minutes!".format(mapping[key], key)), loop)
+            notified[key][1] = True
 
-        elif hours == 0 and minutes == 5 and channel is not None:
+        elif hours == 0 and minutes == 5 and channel is not None and not notified[key][2]:
             asyncio.run_coroutine_threadsafe(
                 channel.send("{} {} will spawn in 5 minutes!".format(mapping[key], key)), loop)
+            notified[key][2] = True
 
 
 def notify_karanda():
@@ -64,6 +67,7 @@ def notify_karanda():
     timers["Karanda"] = karanda_timer
     remaining_time["Karanda"] = time_remaining
     start_time["Karanda"] = time.time()
+    notified["Karanda"] = [False, False, False]
 
 
 def notify_kutum():
@@ -78,6 +82,7 @@ def notify_kutum():
     timers["Kutum"] = kutum_timer
     remaining_time["Kutum"] = time_remaining
     start_time["Kutum"] = time.time()
+    notified["Kutum"] = [False, False, False]
 
 
 def notify_kzarka():
@@ -92,6 +97,7 @@ def notify_kzarka():
     timers["Kzarka"] = kzarka_timer
     remaining_time["Kzarka"] = time_remaining
     start_time["Kzarka"] = time.time()
+    notified["Kzarka"] = [False, False, False]
 
 
 def notify_offin():
@@ -106,6 +112,7 @@ def notify_offin():
     timers["Offin"] = offin_timer
     remaining_time["Offin"] = time_remaining
     start_time["Offin"] = time.time()
+    notified["Offin"] = [False, False, False]
 
 
 def notify_nouver():
@@ -120,6 +127,7 @@ def notify_nouver():
     timers["Nouver"] = nouver_timer
     remaining_time["Nouver"] = time_remaining
     start_time["Nouver"] = time.time()
+    notified["Nouver"] = [False, False, False]
 
 
 def notify_garmoth():
@@ -134,6 +142,7 @@ def notify_garmoth():
     timers["Garmoth"] = garmoth_timer
     remaining_time["Garmoth"] = time_remaining
     start_time["Garmoth"] = time.time()
+    notified["Garmoth"] = [False, False, False]
 
 
 def notify_quint_and_muraka():
@@ -148,6 +157,7 @@ def notify_quint_and_muraka():
     timers["Quint And Muraka"] = quint_and_muraka_timer
     remaining_time["Quint And Muraka"] = time_remaining
     start_time["Quint And Muraka"] = time.time()
+    notified["Quint And Muraka"] = [False, False, False]
 
 
 def notify_vell():
@@ -162,6 +172,7 @@ def notify_vell():
     timers["Vell"] = vell_timer
     remaining_time["Vell"] = time_remaining
     start_time["Vell"] = time.time()
+    notified["Vell"] = [False, False, False]
 
 
 # spawn times in seconds for each boss
@@ -186,6 +197,8 @@ timers = dict()
 remaining_time = dict()
 start_time = dict()
 
+notified = dict()
+
 channel = None
 
 loop = asyncio.new_event_loop()
@@ -208,6 +221,7 @@ def initialise_timers(bot_channel):
     timers["Karanda"] = karanda_timer
     remaining_time["Karanda"] = time_remaining
     start_time["Karanda"] = time.time()
+    notified["Karanda"] = [False, False, False]
 
     time_remaining = check_remaining_time(kutum, current_time)
     kutum_timer = Timer(time_remaining, notify_kutum)
@@ -215,6 +229,7 @@ def initialise_timers(bot_channel):
     timers["Kutum"] = kutum_timer
     remaining_time["Kutum"] = time_remaining
     start_time["Kutum"] = time.time()
+    notified["Kutum"] = [False, False, False]
 
     time_remaining = check_remaining_time(kzarka, current_time)
     kzarka_timer = Timer(time_remaining, notify_kzarka)
@@ -222,6 +237,7 @@ def initialise_timers(bot_channel):
     timers["Kzarka"] = kzarka_timer
     remaining_time["Kzarka"] = time_remaining
     start_time["Kzarka"] = time.time()
+    notified["Kzarka"] = [False, False, False]
 
     time_remaining = check_remaining_time(offin, current_time)
     offin_timer = Timer(time_remaining, notify_offin)
@@ -229,6 +245,7 @@ def initialise_timers(bot_channel):
     timers["Offin"] = offin_timer
     remaining_time["Offin"] = time_remaining
     start_time["Offin"] = time.time()
+    notified["Offin"] = [False, False, False]
 
     time_remaining = check_remaining_time(nouver, current_time)
     nouver_timer = Timer(time_remaining, notify_nouver)
@@ -236,6 +253,7 @@ def initialise_timers(bot_channel):
     timers["Nouver"] = nouver_timer
     remaining_time["Nouver"] = time_remaining
     start_time["Nouver"] = time.time()
+    notified["Nouver"] = [False, False, False]
 
     time_remaining = check_remaining_time(garmoth, current_time)
     garmoth_timer = Timer(time_remaining, notify_garmoth)
@@ -243,6 +261,7 @@ def initialise_timers(bot_channel):
     timers["Garmoth"] = garmoth_timer
     remaining_time["Garmoth"] = time_remaining
     start_time["Garmoth"] = time.time()
+    notified["Garmoth"] = [False, False, False]
 
     time_remaining = check_remaining_time(quint_and_muraka, current_time)
     quint_and_muraka_timer = Timer(time_remaining, notify_quint_and_muraka)
@@ -250,6 +269,7 @@ def initialise_timers(bot_channel):
     timers["Quint And Muraka"] = quint_and_muraka_timer
     remaining_time["Quint And Muraka"] = time_remaining
     start_time["Quint And Muraka"] = time.time()
+    notified["Quint And Muraka"] = [False, False, False]
 
     time_remaining = check_remaining_time(vell, current_time)
     vell_timer = Timer(time_remaining, notify_vell)
@@ -257,6 +277,7 @@ def initialise_timers(bot_channel):
     timers["Vell"] = vell_timer
     remaining_time["Vell"] = time_remaining
     start_time["Vell"] = time.time()
+    notified["Vell"] = [False, False, False]
 
     return
 
