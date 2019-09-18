@@ -12,17 +12,6 @@ def check_advanced_notice():
     timers["general"] = Timer(40, check_advanced_notice)
     timers["general"].start()
 
-    mapping = {
-        "Karanda": "<@&605835920477913090>",
-        "Kutum": "<@&605835798901817354>",
-        "Kzarka": "<@&605835785907863601>",
-        "Offin": "<@&605835946184802304>",
-        "Nouver": "<@&605835974693617664>",
-        "Garmoth": "<@&605836079504818176>",
-        "Quint And Muraka": "<@&605836116033273858>",
-        "Vell": "<@&605836162824929280>"
-    }
-
     for key in remaining_time.keys():
         elapsed_time = floor(time.time() - start_time[key])
         elapsed_hours = floor(elapsed_time/60/60)
@@ -40,19 +29,24 @@ def check_advanced_notice():
             minutes = 60 + minutes
 
         if hours == 1 and minutes == 0 and channel is not None and not notified[key][0]:
-            asyncio.run_coroutine_threadsafe(
-                channel.send("{} {} will spawn in 60 minutes!".format(mapping[key], key)), loop)
+            hour_notifier = Timer(seconds, notify_in_advance, [key, 60])
+            hour_notifier.start()
             notified[key][0] = True
 
         if hours == 0 and minutes == 30 and channel is not None and not notified[key][1]:
-            asyncio.run_coroutine_threadsafe(
-                channel.send("{} {} will spawn in 30 minutes!".format(mapping[key], key)), loop)
+            half_hour_notifier = Timer(seconds, notify_in_advance, [key, 30])
+            half_hour_notifier.start()
             notified[key][1] = True
 
         elif hours == 0 and minutes == 5 and channel is not None and not notified[key][2]:
-            asyncio.run_coroutine_threadsafe(
-                channel.send("{} {} will spawn in 5 minutes!".format(mapping[key], key)), loop)
+            five_min_notifier = Timer(seconds, notify_in_advance, [key, 5])
+            five_min_notifier.start()
             notified[key][2] = True
+
+
+def notify_in_advance(boss, period):
+    asyncio.run_coroutine_threadsafe(
+        channel.send("{} {} will spawn in {} minutes!".format(mapping[boss], boss, period)), loop)
 
 
 def notify_karanda():
@@ -192,6 +186,17 @@ nouver = [68400,  144000, 260100, 277200, 302400,
 garmoth = [166500, 339300, 586800]
 quint_and_muraka = [256500, 489600]
 vell = [576000]
+
+mapping = {
+    "Karanda": "<@&605835920477913090>",
+    "Kutum": "<@&605835798901817354>",
+    "Kzarka": "<@&605835785907863601>",
+    "Offin": "<@&605835946184802304>",
+    "Nouver": "<@&605835974693617664>",
+    "Garmoth": "<@&605836079504818176>",
+    "Quint And Muraka": "<@&605836116033273858>",
+    "Vell": "<@&605836162824929280>"
+}
 
 timers = dict()
 remaining_time = dict()
