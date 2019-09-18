@@ -190,7 +190,7 @@ nouver = [68400,  144000, 260100, 277200, 302400,
           352800, 403200, 450000, 475200, 519300,
           561600, 598500]
 garmoth = [166500, 339300, 586800]
-quint_and_muraka = [252900, 489600]
+quint_and_muraka = [256500, 489600]
 vell = [576000]
 
 timers = dict()
@@ -296,7 +296,7 @@ def check_remaining_time(boss_spawn_times, current_time):
     return time_remaining
 
 
-async def print_timers(boss=None):
+async def print_timers(spamchannel, boss=None):
     output = ""
 
     if boss is None:
@@ -337,7 +337,7 @@ async def print_timers(boss=None):
             minutes = 60 + minutes
 
         output += "{} will spawn in {}:{}:{}\n".format(boss, hours, minutes, seconds)
-    await channel.send(output)
+    await spamchannel.send(output)
 
 
 def get_curent_time():
