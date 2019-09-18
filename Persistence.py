@@ -92,43 +92,48 @@ class Persistence:
             return False
         return True
 
-    def add_gear(self, toon):
+    def add_toon_to_gear(self, toon):
         cursor = self.connection.cursor()
         cursor.execute("INSERT INTO \"gear\"(toon, dp, ap, aap) VALUES ('{}', 0, 0, 0)".format(toon))
         self.connection.commit()
 
-    def set_dp(self, toon, value):
+    def set_gear_value(self, toon, value, variable):
         cursor = self.connection.cursor()
-        cursor.execute("UPDATE \"gear\" SET dp = \'{}\' WHERE toon=\'{}\'".format(value, toon))
+        cursor.execute("UPDATE \"gear\" SET {} = \'{}\' WHERE toon=\'{}\'".format(variable, value, toon))
         self.connection.commit()
 
-    def get_dp(self, toon):
+    def get_gear_value(self, toon, variable):
         cursor = self.connection.cursor()
-        cursor.execute("SELECT dp FROM \"gear\" WHERE toon='{}'".format(toon))
+        cursor.execute("SELECT {} FROM \"gear\" WHERE toon='{}'".format(variable, toon))
         dp = cursor.fetchone()
         return dp[0]
 
-    def set_ap(self, toon, value):
+    # ~~~~~~~~~~~~~~~~~~~~ Skills ~~~~~~~~~~~~~~~~~~~~
+    def check_if_toon_exists_in_skills(self, toon):
         cursor = self.connection.cursor()
-        cursor.execute("UPDATE \"gear\" SET ap = \'{}\' WHERE toon=\'{}\'".format(value, toon))
+        cursor.execute("SELECT * FROM \"skills\" WHERE toon=\'{}\'".format(toon))
+        entry = cursor.fetchone()
+        if not entry:
+            return False
+        return True
+
+    def add_toon_to_skills(self, toon):
+        cursor = self.connection.cursor()
+        cursor.execute("INSERT INTO \"skills\"(toon, gathering, fishing, hunting, cooking, alchemy, " +
+                       "processing, training, trade, farming, sailing)" +
+                       "VALUES ('{}', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)".format(toon))
         self.connection.commit()
 
-    def get_ap(self, toon):
+    def set_skill_value(self, toon, value, skill):
         cursor = self.connection.cursor()
-        cursor.execute("SELECT ap FROM \"gear\" WHERE toon='{}'".format(toon))
-        ap = cursor.fetchone()
-        return ap[0]
-
-    def set_aap(self, toon, value):
-        cursor = self.connection.cursor()
-        cursor.execute("UPDATE \"gear\" SET aap = \'{}\' WHERE toon=\'{}\'".format(value, toon))
+        cursor.execute("UPDATE \"skills\" SET {} = '{}' WHERE toon = '{}'".format(skill, value, toon))
         self.connection.commit()
 
-    def get_aap(self, toon):
+    def get_skill_value(self, toon, skill):
         cursor = self.connection.cursor()
-        cursor.execute("SELECT aap FROM \"gear\" WHERE toon='{}'".format(toon))
-        aap = cursor.fetchone()
-        return aap[0]
+        cursor.execute("SELECT {} FROM \"skills\" WHERE toon='{}'".format(skill, toon))
+        value = cursor.fetchone()
+        return value[0]
 
     # ~~~~~~~~~~~~~~~~~~~~ History ~~~~~~~~~~~~~~~~~~~~
 
@@ -141,7 +146,7 @@ class Persistence:
     def get_toon_history(self, toon):
         cursor = self.connection.cursor()
         cursor.execute("SELECT \"event_date\", \"event_time\", \"toon\", \"stat\", \"amount\" \
-                       FROM \"history\" WHERE toon='{}'".format(toon) +
+                        FROM \"history\" WHERE toon='{}'".format(toon) +
                        "ORDER BY \"event_date\" DESC, \"event_time\" DESC")
         result = cursor.fetchmany(10)
         return result

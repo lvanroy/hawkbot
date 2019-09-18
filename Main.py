@@ -9,7 +9,7 @@ from discord.utils import get
 f = open("token.txt", 'r')
 token = f.read().split("\n")[0]
 
-user_tracker = None
+user_tracker = UserTracker()
 
 client = discord.Client()
 loop = asyncio.new_event_loop()
@@ -54,10 +54,12 @@ async def on_message(message):
                      "!toons add <name> <family> <class>\n" \
                      "!toons remove <name> <family>\n" \
                      "\nUse the following commands to set respective gear variables:\n" + \
-                     "!gear set ap <value> <toon>\n" + \
-                     "!gear set aap <value> <toon>\n" + \
-                     "!gear set dp <value> <toon>\n" \
-                     "\n use the following commands to see the history for a given toon or family\n" \
+                     "!gear set <variable> <value> <toon>\n" + \
+                     "Variable can either be ap, aap or dp\n" + \
+                     "\nUse the following commands to set respective skill variables:\n" + \
+                     "!skills set <variable> <value> <toon>\n" + \
+                     "Variable can either be either one of the life skill professions\n" + \
+                     "\nUse the following commands to see the history for a given toon or family\n" \
                      "!toonhistory <toon>\n" \
                      "!familyhistory <family>\n" + \
                      "\nUse the following commands to see the current timers:\n" + \
@@ -143,35 +145,32 @@ async def on_message(message):
         # these stats will be used to properly determine the stats of the guild members, as well
         # as help us properly organise events, and notify the proper people for those events
         # -----------------------------------------------------------------------------------------
-        elif message.content.startswith("!gear set ap "):
+        elif message.content.startswith("!gear set "):
             arguments = message.content.split(" ")
             channel = message.channel
             if len(arguments) == 5:
                 toon = arguments[-1]
                 ap = arguments[-2]
-                user_tracker.set_ap(ap, toon, channel)
+                variable = arguments[-3]
+                user_tracker.set_gear_variable(channel, ap, toon, variable)
             else:
                 await alert_for_incorrect_format(channel)
             return
 
-        elif message.content.startswith("!gear set aap "):
-            arguments = message.content.split(" ")
-            channel = message.channel
-            if len(arguments) == 5:
-                aap = arguments[-2]
-                toon = arguments[-1]
-                user_tracker.set_aap(aap, toon, channel)
-            else:
-                await alert_for_incorrect_format(channel)
-            return
-
-        elif message.content.startswith("!gear set dp "):
+        # -----------------------------------------------------------------------------------------
+        # Skill commands
+        # these commands are al related to the skill database that is stored for each guild member
+        # these stats will be used to list progress for each toon that is part of the guild
+        # these stats can also be used to properly direct messages for events that require higher levels
+        # -----------------------------------------------------------------------------------------
+        elif message.content.startswith("!skills set"):
             arguments = message.content.split(" ")
             channel = message.channel
             if len(arguments) == 5:
                 toon = arguments[-1]
-                dp = arguments[-2]
-                user_tracker.set_dp(dp, toon, channel)
+                value = arguments[-2]
+                skill = arguments[-3]
+                user_tracker.set_skill_value(channel, value, toon, skill)
             else:
                 await alert_for_incorrect_format(channel)
             return
@@ -267,7 +266,8 @@ async def on_message(message):
                      "Quint/Muraka\n" \
                      "Vell\n"\
                      "Having one of these boss roles will enable you to get notified whenever these bosses are " \
-                     "30 min away from spawning, 5 min away from spawning and when they have spawned.\n" \
+                     "60 min away from spawning, 30 min away from spawning, " \
+                     "5 min away from spawning and when they have spawned.\n" \
                      "roles can be removed by the !remove <role> command\n"
             await message.channel.send(output)
             return

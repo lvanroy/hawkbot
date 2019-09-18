@@ -90,19 +90,19 @@ class UserTracker:
 
     # ~~~~~~~~~~~~~~~~~~~~ Gear ~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def set_ap(self, value, toon, channel):
+    def set_gear_variable(self, channel, value, toon, variable):
         condition = self.check_if_integer(value)
         if condition:
             if not persistence.check_if_toon_exists(toon):
                 asyncio.ensure_future(channel.send("Error: this toon does not exist."))
                 return
             if not persistence.check_if_toon_exists_in_gear(toon):
-                persistence.add_gear(toon)
-            old_ap = persistence.get_ap(toon)
-            persistence.set_ap(toon, value)
-            dif = int(value) - old_ap
-            persistence.add_event(toon, "ap", dif)
-            if str(persistence.get_ap(toon)) == value:
+                persistence.add_toon_to_gear(toon)
+            old_value = persistence.get_gear_value(toon, variable)
+            persistence.set_gear_value(toon, value, variable)
+            difference = int(value) - old_value
+            persistence.add_event(toon, "ap", difference)
+            if str(persistence.get_gear_value(toon, variable)) == value:
                 asyncio.ensure_future(channel.send("Success: ap was updated."))
             else:
                 asyncio.ensure_future(channel.send("Error: something went wrong, please notify the bot owner."))
@@ -110,45 +110,23 @@ class UserTracker:
             asyncio.ensure_future(self.alert_for_incorrect_format(channel))
         return
 
-    def set_aap(self, value, toon, channel):
+    # ~~~~~~~~~~~~~~~~~~~ Skills ~~~~~~~~~~~~~~~~~~~~~~~~~
+    def set_skill_value(self, channel, value, toon, skill):
         condition = self.check_if_integer(value)
         if condition:
             if not persistence.check_if_toon_exists(toon):
                 asyncio.ensure_future(channel.send("Error: this toon does not exist."))
                 return
-            if not persistence.check_if_toon_exists_in_gear(toon):
-                persistence.add_gear(toon)
-            old_aap = persistence.get_aap(toon)
-            persistence.set_aap(toon, value)
-            dif = int(value) - old_aap
-            persistence.add_event(toon, "aap", dif)
-            if str(persistence.get_aap(toon)) == value:
-                asyncio.ensure_future(channel.send("Success: aap was updated."))
+            if not persistence.check_if_toon_exists_in_skills(toon):
+                persistence.add_toon_to_skills(toon)
+            old_value = persistence.get_skill_value(toon, skill)
+            persistence.set_skill_value(toon, value, skill)
+            difference = int(value) - old_value
+            persistence.add_event(toon, skill, difference)
+            if str(persistence.get_skill_value(toon, skill)) == value:
+                asyncio.ensure_future(channel.send("Success: {} was updated.".format(skill)))
             else:
                 asyncio.ensure_future(channel.send("Error: something went wrong, please notify the bot owner."))
-        else:
-            asyncio.ensure_future(self.alert_for_incorrect_format(channel))
-        return
-
-    def set_dp(self, value, toon, channel):
-        condition = self.check_if_integer(value)
-        if condition:
-            if not persistence.check_if_toon_exists(toon):
-                asyncio.ensure_future(channel.send("Error: this toon does not exist."))
-                return
-            if not persistence.check_if_toon_exists_in_gear(toon):
-                persistence.add_gear(toon)
-            old_dp = persistence.get_dp(toon)
-            persistence.set_dp(toon, value)
-            dif = int(value) - old_dp
-            persistence.add_event(toon, "dp", dif)
-            if str(persistence.get_dp(toon)) == value:
-                asyncio.ensure_future(channel.send("Success: dp was updated."))
-            else:
-                asyncio.ensure_future(channel.send("Error: something went wrong, please notify the bot owner."))
-        else:
-            asyncio.ensure_future(self.alert_for_incorrect_format(channel))
-        return
 
     # ~~~~~~~~~~~~~~~~~~~ History ~~~~~~~~~~~~~~~~~~~~~~~~
 
