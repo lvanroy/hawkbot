@@ -131,7 +131,8 @@ class UserTracker:
             old_value = persistence.get_gear_value(toon, variable)
             persistence.set_gear_value(toon, value, variable)
             difference = int(value) - old_value
-            persistence.add_event(toon, "ap", difference)
+            if difference != 0:
+                persistence.add_event(toon, "ap", difference)
             if str(persistence.get_gear_value(toon, variable)) == value:
                 asyncio.ensure_future(channel.send("Success: ap was updated."))
             else:
@@ -152,7 +153,8 @@ class UserTracker:
             old_value = persistence.get_skill_value(toon, skill)
             persistence.set_skill_value(toon, value, skill)
             difference = int(value) - old_value
-            persistence.add_event(toon, skill, difference)
+            if difference != 0:
+                persistence.add_event(toon, skill, difference)
             if str(persistence.get_skill_value(toon, skill)) == value:
                 asyncio.ensure_future(channel.send("Success: {} was updated.".format(skill)))
             else:
