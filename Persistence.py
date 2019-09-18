@@ -62,11 +62,12 @@ class Persistence:
             return False
         return True
 
-    def add_toon(self, toon, family, toon_class):
+    def add_toon(self, toon, family, toon_class, level, xp):
         cursor = self.connection.cursor()
         try:
-            cursor.execute("INSERT INTO \"toons\"(name, family, class) VALUES (\'{}\', \'{}\', \'{}\')"
-                           .format(toon, family, toon_class))
+            cursor.execute("INSERT INTO \"toons\"(name, family, class, level, xp) "
+                           "VALUES (\'{}\', \'{}\', \'{}\', {}, {})"
+                           .format(toon, family, toon_class, level, xp))
         except errors.lookup(FOREIGN_KEY_VIOLATION):
             raise
         self.connection.commit()
@@ -78,7 +79,7 @@ class Persistence:
 
     def get_toons(self, family):
         cursor = self.connection.cursor()
-        cursor.execute("SELECT * FROM \"toons\" WHERE family='{}'".format(family))
+        cursor.execute("SELECT name, family, class, level, xp FROM \"toons\" WHERE family='{}'".format(family))
         result = cursor.fetchall()
         return result
 

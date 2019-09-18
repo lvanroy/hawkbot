@@ -18,7 +18,7 @@ asyncio.set_event_loop(loop)
 
 @client.event
 async def on_ready():
-    bot_channel = client.get_channel(605023656132739110)
+    bot_channel = client.get_channel(623893978273808404)
     initialise_timers(bot_channel)
 
     global user_tracker
@@ -51,8 +51,10 @@ async def on_message(message):
                      "!family add <name>\n" \
                      "!family remove <name>\n" \
                      "\nUse the following commands to make and or delete toons:\n" \
-                     "!toons add <name> <family> <class>\n" \
+                     "!toons add <name> <family> <class> <level> <xp>\n" \
                      "!toons remove <name> <family>\n" \
+                     "\nUse the following commands to get an overview of the toons for a given family:\n" \
+                     "!toons overview <family>\n" \
                      "\nUse the following commands to set respective gear variables:\n" + \
                      "!gear set <variable> <value> <toon>\n" + \
                      "Variable can either be ap, aap or dp\n" + \
@@ -108,13 +110,15 @@ async def on_message(message):
         elif message.content.startswith("!toons add "):
             arguments = message.content.split(" ")
             channel = message.channel
-            if len(arguments) == 6:
-                arguments[-2] = arguments[-2] + " " + arguments[-1]
+            if len(arguments) == 8:
+                arguments[-4] = arguments[-4] + " " + arguments[-3]
                 arguments.pop()
-            if len(arguments) == 5:
+            if len(arguments) == 7:
                 toon_name = arguments[2]
                 toon_family = arguments[3]
                 toon_class = arguments[4]
+                level = arguments[5]
+                xp = arguments[6]
                 user = message.author
                 if toon_class not in ["Warrior",     "Ranger",  "Sorceress", "Berserker",
                                       "Valkyrie",    "Wizard",  "Witch",     "Tamer",
@@ -124,7 +128,7 @@ async def on_message(message):
                     await channel.send("Error, that class does not exist. "
                                        "All classes need to start with capital letters.")
                     return
-                user_tracker.add_toon(user, toon_name, toon_family, toon_class, channel)
+                user_tracker.add_toon(user, toon_name, toon_family, toon_class, level, xp, channel)
             else:
                 await alert_for_incorrect_format(channel)
 
@@ -136,6 +140,15 @@ async def on_message(message):
                 toon_family = arguments[3]
                 user = message.author
                 user_tracker.remove_toon(user, toon_name, toon_family, channel)
+            else:
+                await alert_for_incorrect_format(channel)
+
+        elif message.content.startswith("!toons overview"):
+            arguments = message.content.split(" ")
+            channel = message.channel
+            if len(arguments) == 3:
+                toon_family = arguments[-1]
+                user_tracker.get_toon_overview_gear(channel, toon_family)
             else:
                 await alert_for_incorrect_format(channel)
 
@@ -209,9 +222,9 @@ async def on_message(message):
         elif message.content.startswith("!bosstimers"):
             arguments = message.content.split(" ")
             if len(arguments) == 1:
-                await print_timers()
+                await print_timers(message.channel)
             elif len(arguments) == 2:
-                await print_timers(arguments[1])
+                await print_timers(message.channel, arguments[1])
             else:
                 await alert_for_incorrect_format(message.channel)
             return

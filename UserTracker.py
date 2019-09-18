@@ -39,12 +39,12 @@ class UserTracker:
 
     # ~~~~~~~~~~~~~~~~~~~~ Toons ~~~~~~~~~~~~~~~~~~~~~~~~
     @staticmethod
-    def add_toon(user, toon, toon_family, toon_class, channel):
+    def add_toon(user, toon, toon_family, toon_class, level, xp, channel):
         if not persistence.check_if_toon_exists(toon):
             user_id = user.id
             if persistence.check_if_user_owns_family(user_id, toon_family):
                 try:
-                    persistence.add_toon(toon, toon_family, toon_class)
+                    persistence.add_toon(toon, toon_family, toon_class, level, xp)
                 except psycopg2.errors.lookup(FOREIGN_KEY_VIOLATION):
                     asyncio.ensure_future(channel.send("something went wrong while adding the toon, make sure you " +
                                                        "have added a family before adding a toon."))
@@ -88,8 +88,38 @@ class UserTracker:
             asyncio.ensure_future(channel.send("Error: this family does not exist."))
         return list()
 
-    # ~~~~~~~~~~~~~~~~~~~~ Gear ~~~~~~~~~~~~~~~~~~~~~~~~
+    @staticmethod
+    def get_toon_overview_gear(channel, family):
+        if persistence.check_if_family_exists(family):
+            toons = persistence.get_toons(family)
+            if len(toons) == 0:
+                asyncio.ensure_future(channel.send("Error: there are no toons registered with this family."))
+            else:
+                output = "```========================================================\n"
+                output += "|toon            |class      |level|%      |ap |aap|dp |\n"
+                output += "========================================================\n"
+                for toon in toons:
+                    condition = persistence.check_if_toon_exists_in_gear(toon[0])
+                    output += "|" + toon[0] + ((16 - len(toon[0])) * ' ')
+                    output += "|" + toon[2] + ((11 - len(toon[2])) * ' ')
+                    output += "|" + str(toon[3]) + ((5 - len(str(toon[3]))) * ' ')
+                    output += "|" + str(toon[4]) + ((6 - len(str(toon[4]))) * ' ') + "%"
+                    if condition:
+                        ap = persistence.get_gear_value(toon[0], "ap")
+                        aap = persistence.get_gear_value(toon[0], "aap")
+                        dp = persistence.get_gear_value(toon[0], "dp")
+                        output += "|" + ap + ((3 - len(ap)) * ' ')
+                        output += "|" + aap + ((3 - len(aap)) * ' ')
+                        output += "|" + dp + ((3 - len(dp)) * ' ')
+                    else:
+                        output += '|0  |0  |0  '
+                    output += "|\n"
+                output += "========================================================\n```"
+                asyncio.ensure_future(channel.send(output))
+        else:
+            asyncio.ensure_future(channel.send("Error: that family name does not exist."))
 
+    # ~~~~~~~~~~~~~~~~~~~~ Gear ~~~~~~~~~~~~~~~~~~~~~~~~
     def set_gear_variable(self, channel, value, toon, variable):
         condition = self.check_if_integer(value)
         if condition:
