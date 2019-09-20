@@ -85,7 +85,7 @@ class Persistence:
 
     def set_toon_level(self, toon ,level, xp_percentage):
         cursor = self.connection.cursor()
-        cursor.execute("UPDATE \"toons\" set level={} and xp={} where name = '{}'"
+        cursor.execute("UPDATE \"toons\" set level={}, xp={} where name = '{}'"
                        .format(level, xp_percentage, toon))
         self.connection.commit()
 
