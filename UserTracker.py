@@ -108,9 +108,9 @@ class UserTracker:
                         ap = persistence.get_gear_value(toon[0], "ap")
                         aap = persistence.get_gear_value(toon[0], "aap")
                         dp = persistence.get_gear_value(toon[0], "dp")
-                        output += "|" + str(ap) + ((3 - len(ap)) * ' ')
-                        output += "|" + str(aap) + ((3 - len(aap)) * ' ')
-                        output += "|" + str(dp) + ((3 - len(dp)) * ' ')
+                        output += "|" + str(ap) + ((3 - len(str(ap))) * ' ')
+                        output += "|" + str(aap) + ((3 - len(str(aap))) * ' ')
+                        output += "|" + str(dp) + ((3 - len(str(dp))) * ' ')
                     else:
                         output += '|0  |0  |0  '
                     output += "|\n"
