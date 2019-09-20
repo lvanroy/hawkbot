@@ -83,6 +83,18 @@ class Persistence:
         result = cursor.fetchall()
         return result
 
+    def set_toon_level(self, toon ,level, xp_percentage):
+        cursor = self.connection.cursor()
+        cursor.execute("UPDATE \"toons\" set level='{}' and xp='{}' where toon = '{}'"
+                       .format(level, xp_percentage, toon))
+        self.connection.commit()
+
+    def get_toon_level(self, toon):
+        cursor = self.connection.cursor()
+        cursor.execute("SELECT level, xp from \"toons\" where toon = {}".format(toon))
+        result = cursor.fetchone()
+        return result[0]
+
     # ~~~~~~~~~~~~~~~~~~~~ Gear ~~~~~~~~~~~~~~~~~~~~
 
     def check_if_toon_exists_in_gear(self, toon):
@@ -135,6 +147,13 @@ class Persistence:
         cursor.execute("SELECT {} FROM \"skills\" WHERE toon='{}'".format(skill, toon))
         value = cursor.fetchone()
         return value[0]
+
+    def get_skills_for_toon(self, toon):
+        cursor = self.connection.cursor()
+        cursor.execute("SELECT gathering, fishing, hunting, cooking, alchemy, processing, training, " \
+                       "trade, farming, sailing FROM \"skills\" where toon = '{}'".format(toon))
+        result = cursor.fetchone()
+        return result
 
     # ~~~~~~~~~~~~~~~~~~~~ History ~~~~~~~~~~~~~~~~~~~~
 

@@ -89,7 +89,19 @@ class UserTracker:
         return list()
 
     @staticmethod
-    def get_toon_overview_gear(channel, family):
+    def set_toon_level(channel, toon, level, xp_percentage):
+        if persistence.check_if_toon_exists(toon):
+            persistence.set_toon_level(toon, level, xp_percentage)
+            result = persistence.get_toon_level(toon)
+            if result[0] == level and result[1] == xp_percentage:
+                asyncio.ensure_future(channel.send("Success: the level was successfully updated."))
+            else:
+                asyncio.ensure_future(channel.send("Error: something went wrong, please notify the bot owner."))
+        else:
+            asyncio.ensure_future(channel.send("Error: this toon does not exist."))
+
+    @staticmethod
+    def get_toon_overview(channel, family):
         if persistence.check_if_family_exists(family):
             toons = persistence.get_toons(family)
             if len(toons) == 0:
@@ -159,6 +171,46 @@ class UserTracker:
                 asyncio.ensure_future(channel.send("Success: {} was updated.".format(skill)))
             else:
                 asyncio.ensure_future(channel.send("Error: something went wrong, please notify the bot owner."))
+
+    @staticmethod
+    def get_skill_overview(channel, family):
+        if persistence.check_if_family_exists(family):
+            toons = persistence.get_toons(family)
+            if len(toons) == 0:
+                asyncio.ensure_future(channel.send("Error: there are no toons registered with this family."))
+            else:
+                output = "```====================================================================================" \
+                         "===========================================\n"
+                output += "|toon            |class      |level|%      |Gathering |Fishing   |Hunting   |" \
+                          "Cooking   |Alchemy   |Processing|Training  |Trade     |Farming   |Sailing   |\n"
+                output += "======================================================================================" \
+                          "=========================================\n"
+                for toon in toons:
+                    condition = persistence.check_if_toon_exists_in_skills(toon[0])
+                    output += "|" + toon[0] + ((16 - len(toon[0])) * ' ')
+                    output += "|" + toon[2] + ((11 - len(toon[2])) * ' ')
+                    output += "|" + str(toon[3]) + ((5 - len(str(toon[3]))) * ' ')
+                    output += "|" + str(toon[4]) + ((6 - len(str(toon[4]))) * ' ') + "%"
+                    if condition:
+                        skills = persistence.get_skills_for_toon(toon)
+                        output += "|" + str(skills[0]) + ((10 - len(str(skills[0]))) * ' ')
+                        output += "|" + str(skills[1]) + ((10 - len(str(skills[1]))) * ' ')
+                        output += "|" + str(skills[2]) + ((10 - len(str(skills[2]))) * ' ')
+                        output += "|" + str(skills[3]) + ((10 - len(str(skills[3]))) * ' ')
+                        output += "|" + str(skills[4]) + ((10 - len(str(skills[4]))) * ' ')
+                        output += "|" + str(skills[5]) + ((10 - len(str(skills[5]))) * ' ')
+                        output += "|" + str(skills[6]) + ((10 - len(str(skills[6]))) * ' ')
+                        output += "|" + str(skills[7]) + ((10 - len(str(skills[7]))) * ' ')
+                        output += "|" + str(skills[8]) + ((10 - len(str(skills[8]))) * ' ')
+                        output += "|" + str(skills[9]) + ((10 - len(str(skills[9]))) * ' ')
+                    else:
+                        output += '|0         ' * 10
+                    output += "|\n"
+                output += "======================================================================================" \
+                          "=========================================```"
+                asyncio.ensure_future(channel.send(output))
+        else:
+            asyncio.ensure_future(channel.send("Error: that family name does not exist."))
 
     # ~~~~~~~~~~~~~~~~~~~ History ~~~~~~~~~~~~~~~~~~~~~~~~
 

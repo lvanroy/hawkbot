@@ -51,15 +51,18 @@ async def on_message(message):
                      "!family add <name>\n" \
                      "!family remove <name>\n" \
                      "\nUse the following commands to make and or delete toons:\n" \
-                     "!toons add <name> <family> <class> <level> <xp>\n" \
+                     "!toons add <name> <family> <class> <level> <xp percentage>\n" \
                      "!toons remove <name> <family>\n" \
+                     "!toons set level <name> <level> <xp percentage>\n" \
                      "\nUse the following commands to get an overview of the toons for a given family:\n" \
                      "!toons overview <family>\n" \
                      "\nUse the following commands to set respective gear variables:\n" + \
                      "!gear set <variable> <value> <toon>\n" + \
                      "Variable can either be ap, aap or dp\n" + \
-                     "\nUse the following commands to set respective skill variables:\n" + \
+                     "\nUse the following commands to set respective skill variables:\n" \
+                     "skill levels are represented in numerical form (aka apprentice 5 = 15)" + \
                      "!skills set <variable> <value> <toon>\n" + \
+                     "!skills overview <family>\n" + \
                      "Variable can either be either one of the life skill professions\n" + \
                      "\nUse the following commands to see the history for a given toon or family\n" \
                      "!toonhistory <toon>\n" \
@@ -143,12 +146,23 @@ async def on_message(message):
             else:
                 await alert_for_incorrect_format(channel)
 
+        elif message.content.startswith("!toons set level "):
+            arguments = message.content.split(" ")
+            channel = message.channel
+            if len(arguments) == 6:
+                toon_name = arguments[-3]
+                toon_level = arguments[-2]
+                toon_xp_percentage = arguments[-1]
+                user_tracker.set_toon_level(channel, toon_name, toon_level, toon_xp_percentage)
+            else:
+                await alert_for_incorrect_format(channel)
+
         elif message.content.startswith("!toons overview"):
             arguments = message.content.split(" ")
             channel = message.channel
             if len(arguments) == 3:
                 toon_family = arguments[-1]
-                user_tracker.get_toon_overview_gear(channel, toon_family)
+                user_tracker.get_toon_overview(channel, toon_family)
             else:
                 await alert_for_incorrect_format(channel)
 
@@ -187,6 +201,15 @@ async def on_message(message):
             else:
                 await alert_for_incorrect_format(channel)
             return
+
+        elif message.content.startswith("!skills overview "):
+            arguments = message.content.split(" ")
+            channel = message.channel
+            if len(arguments) == 3:
+                toon_family = arguments[-1]
+                user_tracker.get_skill_overview(channel, toon_family)
+            else:
+                await alert_for_incorrect_format(channel)
 
         # -----------------------------------------------------------------------------------------
         # History commands
