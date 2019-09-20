@@ -112,7 +112,7 @@ async def on_message(message):
             channel = message.channel
             if len(arguments) == 8:
                 arguments[-4] = arguments[-4] + " " + arguments[-3]
-                arguments.pop()
+                arguments.pop(-3)
             if len(arguments) == 7:
                 toon_name = arguments[2]
                 toon_family = arguments[3]
