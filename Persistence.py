@@ -93,7 +93,7 @@ class Persistence:
         cursor = self.connection.cursor()
         cursor.execute("SELECT level, xp from \"toons\" where name = '{}'".format(toon))
         result = cursor.fetchone()
-        return result[0]
+        return result
 
     # ~~~~~~~~~~~~~~~~~~~~ Gear ~~~~~~~~~~~~~~~~~~~~
 
