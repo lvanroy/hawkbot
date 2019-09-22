@@ -94,8 +94,8 @@ class UserTracker:
             persistence.set_toon_level(toon, level, xp_percentage)
             result = persistence.get_toon_level(toon)
             print(str(result[0]) == level)
-            print(str(result[1]) == xp_percentage)
-            if str(result[0]) == level and str(result[1]) == xp_percentage:
+            print(float(result[1]) == float(xp_percentage))
+            if str(result[0]) == level and float(result[1]) == float(xp_percentage):
                 asyncio.ensure_future(channel.send("Success: the level was successfully updated."))
             else:
                 asyncio.ensure_future(channel.send("Error: something went wrong, please notify the bot owner."))
