@@ -4,6 +4,8 @@ import asyncio
 
 from BossTimers import initialise_timers, print_timers
 from UserTracker import UserTracker
+from UpdateTracker import initialise_update_tracker
+
 from discord.utils import get
 
 f = open("token.txt", 'r')
@@ -20,6 +22,10 @@ asyncio.set_event_loop(loop)
 async def on_ready():
     bot_channel = client.get_channel(623893978273808404)
     initialise_timers(bot_channel)
+
+    update_channel = client.get_channel(626063347854606337)
+    news_channel = client.get_channel(626063327407112192)
+    initialise_update_tracker(news_channel, update_channel)
 
     global user_tracker
     user_tracker = UserTracker()
@@ -60,7 +66,7 @@ async def on_message(message):
                      "!gear set <variable> <value> <toon>\n" + \
                      "Variable can either be ap, aap or dp\n" + \
                      "\nUse the following commands to set respective skill variables:\n" \
-                     "skill levels are represented in numerical form (aka apprentice 5 = 15)" + \
+                     "skill levels are represented in numerical form (aka apprentice 5 = 15)\n" + \
                      "!skills set <variable> <value> <toon>\n" + \
                      "!skills overview <family>\n" + \
                      "Variable can either be either one of the life skill professions\n" + \

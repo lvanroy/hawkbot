@@ -182,11 +182,11 @@ class UserTracker:
                 asyncio.ensure_future(channel.send("Error: there are no toons registered with this family."))
             else:
                 output = "```====================================================================================" \
-                         "===========================================\n"
-                output += "|toon            |class      |level|%      |Gathering |Fishing   |Hunting   |" \
-                          "Cooking   |Alchemy   |Processing|Training  |Trade     |Farming   |Sailing   |\n"
+                         "====================\n"
+                output += "|toon            |class      |level|%      |Gath |Fish |Hunt |" \
+                          "Cook |Alch |Proc |Train|Trade|Farm |Sail |\n"
                 output += "======================================================================================" \
-                          "=========================================\n"
+                          "==================\n"
                 for toon in toons:
                     condition = persistence.check_if_toon_exists_in_skills(toon[0])
                     output += "|" + toon[0] + ((16 - len(toon[0])) * ' ')
@@ -194,23 +194,36 @@ class UserTracker:
                     output += "|" + str(toon[3]) + ((5 - len(str(toon[3]))) * ' ')
                     output += "|" + str(toon[4]) + ((6 - len(str(toon[4]))) * ' ') + "%"
                     if condition:
-                        skills = persistence.get_skills_for_toon(toon)
-                        output += "|" + str(skills[0]) + ((10 - len(str(skills[0]))) * ' ')
-                        output += "|" + str(skills[1]) + ((10 - len(str(skills[1]))) * ' ')
-                        output += "|" + str(skills[2]) + ((10 - len(str(skills[2]))) * ' ')
-                        output += "|" + str(skills[3]) + ((10 - len(str(skills[3]))) * ' ')
-                        output += "|" + str(skills[4]) + ((10 - len(str(skills[4]))) * ' ')
-                        output += "|" + str(skills[5]) + ((10 - len(str(skills[5]))) * ' ')
-                        output += "|" + str(skills[6]) + ((10 - len(str(skills[6]))) * ' ')
-                        output += "|" + str(skills[7]) + ((10 - len(str(skills[7]))) * ' ')
-                        output += "|" + str(skills[8]) + ((10 - len(str(skills[8]))) * ' ')
-                        output += "|" + str(skills[9]) + ((10 - len(str(skills[9]))) * ' ')
+                        skills = persistence.get_skills_for_toon(toon[0])
+                        output += "|" + str(skills[0]) + ((5 - len(str(skills[0]))) * ' ')
+                        output += "|" + str(skills[1]) + ((5 - len(str(skills[1]))) * ' ')
+                        output += "|" + str(skills[2]) + ((5 - len(str(skills[2]))) * ' ')
+                        output += "|" + str(skills[3]) + ((5 - len(str(skills[3]))) * ' ')
+                        output += "|" + str(skills[4]) + ((5 - len(str(skills[4]))) * ' ')
+                        output += "|" + str(skills[5]) + ((5 - len(str(skills[5]))) * ' ')
+                        output += "|" + str(skills[6]) + ((5 - len(str(skills[6]))) * ' ')
+                        output += "|" + str(skills[7]) + ((5 - len(str(skills[7]))) * ' ')
+                        output += "|" + str(skills[8]) + ((5 - len(str(skills[8]))) * ' ')
+                        output += "|" + str(skills[9]) + ((5 - len(str(skills[9]))) * ' ')
                     else:
-                        output += '|0         ' * 10
+                        output += '|0    ' * 10
                     output += "|\n"
                 output += "======================================================================================" \
-                          "=========================================```"
+                          "==================```"
+                output2 = "```====================================================================================" \
+                          "====================" \
+                          "\n| The conversion of numerical values to actual skill levels is given by:" + 31 * ' ' +\
+                          "|\n| 1-10:   beginner      1-10" + 75 * ' ' +\
+                          "|\n| 11-20:  apprentice    1-10" + 75 * ' ' +\
+                          "|\n| 21-30:  skilled       1-10" + 75 * ' ' +\
+                          "|\n| 31-40:  professional  1-10" + 75 * ' ' +\
+                          "|\n| 41-50:  artisan       1-10" + 75 * ' ' +\
+                          "|\n| 51-80:  master        1-30" + 75 * ' ' +\
+                          "|\n| 81-130: guru          1-50" + 75 * ' ' +\
+                          "|\n======================================================================================" \
+                          "==================```"
                 asyncio.ensure_future(channel.send(output))
+                asyncio.ensure_future(channel.send(output2))
         else:
             asyncio.ensure_future(channel.send("Error: that family name does not exist."))
 
