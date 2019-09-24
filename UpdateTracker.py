@@ -47,7 +47,7 @@ def check_for_updates():
     new_updates = list()
 
     for entry in newsParser.entries:
-        title = entry["title"]
+        title = escape_special_characters(entry["title"])
         pubdate = entry["published"]
         pubdate = pubdate.split(",")[1]
         print(pubdate)
@@ -64,13 +64,13 @@ def check_for_updates():
         else:
             break
 
-    for entry in reversed(new_news):
+    for entry in new_news:
         output = entry["title"]
-        output += "\n[more here]({})".format(entry["link"])
+        output += "\n{}".format(entry["link"])
         asyncio.run_coroutine_threadsafe(news_channel.send(output), loop)
 
     for entry in updateParser.entries:
-        title = entry["title"]
+        title = escape_special_characters(entry["title"])
         pubdate = entry["published"]
         pubdate = pubdate.split(",")[1]
         day = pubdate.split(" ")[1]
@@ -86,11 +86,11 @@ def check_for_updates():
         else:
             break
 
-    for entry in reversed(new_updates):
+    for entry in new_updates:
         output = entry["title"]
-        output += "\n[more here]({})".format(entry["link"])
+        output += "\n{}".format(entry["link"])
         asyncio.run_coroutine_threadsafe(update_channel.send(output), loop)
-        
+
 
 def initialise_update_tracker(news, update):
     global refreshTimer
@@ -102,3 +102,12 @@ def initialise_update_tracker(news, update):
 
     global update_channel
     update_channel = update
+
+
+def escape_special_characters(text):
+    for index in range(len(text)):
+        if text[index] == "'":
+            text = text[:index] + "\\" + text[index:]
+            index += 1
+    print(text)
+    return text

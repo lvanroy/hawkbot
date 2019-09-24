@@ -191,7 +191,7 @@ class Persistence:
 
     def add_news(self, title, time):
         cursor = self.connection.cursor()
-        cursor.execute("INSERT INTO \"news\" (title, news_time) VALUES ('{}', '{}')".format(title, time))
+        cursor.execute("INSERT INTO \"news\" (title, news_time) VALUES (E'{}', '{}')".format(title, time))
         self.connection.commit()
 
     # ~~~~~~~~~~~~~~~~~~~~ Updates ~~~~~~~~~~~~~~~~~~~~
@@ -205,7 +205,7 @@ class Persistence:
 
     def add_update(self, title, time):
         cursor = self.connection.cursor()
-        cursor.execute("INSERT INTO \"updates\" (title, update_time) VALUES ('{}', '{}')".format(title, time))
+        cursor.execute("INSERT INTO \"updates\" (title, update_time) VALUES (E'{}', '{}')".format(title, time))
         self.connection.commit()
 
     # ~~~~~~~~~~~~~~~~~~~~ General ~~~~~~~~~~~~~~~~~~~~

@@ -24,7 +24,7 @@ async def on_ready():
     initialise_timers(bot_channel)
 
     update_channel = client.get_channel(626063347854606337)
-    news_channel = client.get_channel(626063327407112192)
+    news_channel = client.get_channel(626077658802946068)
     initialise_update_tracker(news_channel, update_channel)
 
     global user_tracker
