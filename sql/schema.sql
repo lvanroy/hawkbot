@@ -45,13 +45,13 @@ CREATE TABLE History(
 
 CREATE TABLE Updates(
   title VARCHAR,
-  update_time DATE,
+  update_time VARCHAR,
   PRIMARY KEY (title, update_time)
 );
 
 CREATE TABLE News(
   title VARCHAR,
-  news_time DATE,
+  news_time VARCHAR,
   PRIMARY KEY (title, news_time)
 );
 

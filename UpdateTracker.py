@@ -21,6 +21,21 @@ persistence = Persistence()
 loop = asyncio.new_event_loop()
 asyncio.set_event_loop(loop)
 
+cast_months = {
+    "Jan": 1,
+    "Feb": 2,
+    "Mar": 3,
+    "Apr": 4,
+    "May": 5,
+    "Jun": 6,
+    "Jul": 7,
+    "Aug": 8,
+    "Sep": 9,
+    "Oct": 10,
+    "Nov": 11,
+    "Dec": 12
+}
+
 
 def check_for_updates():
     print("expire")
@@ -35,13 +50,14 @@ def check_for_updates():
         title = entry["title"]
         pubdate = entry["published"]
         pubdate = pubdate.split(",")[1]
-        day = pubdate.split(" ")[0]
-        month = pubdate.split(" ")[1]
-        year = pubdate.split(" ")[2]
-        hour = pubdate.split(" ")[3].split(":")[0]
-        minute = pubdate.split(" ")[3].split(":")[1]
-        second = pubdate.split(" ")[3].split(":")[2]
-        pubdate = datetime(year, month, day, hour, minute, second)
+        print(pubdate)
+        day = pubdate.split(" ")[1]
+        month = pubdate.split(" ")[2]
+        year = pubdate.split(" ")[3]
+        hour = pubdate.split(" ")[4].split(":")[0]
+        minute = pubdate.split(" ")[4].split(":")[1]
+        second = pubdate.split(" ")[4].split(":")[2]
+        pubdate = datetime(int(year), cast_months[month], int(day), int(hour), int(minute), int(second))
         if not persistence.see_if_news_exists(title, pubdate):
             new_news.insert(0, entry)
             persistence.add_news(title, pubdate)
@@ -57,13 +73,13 @@ def check_for_updates():
         title = entry["title"]
         pubdate = entry["published"]
         pubdate = pubdate.split(",")[1]
-        day = pubdate.split(" ")[0]
-        month = pubdate.split(" ")[1]
-        year = pubdate.split(" ")[2]
-        hour = pubdate.split(" ")[3].split(":")[0]
-        minute = pubdate.split(" ")[3].split(":")[1]
-        second = pubdate.split(" ")[3].split(":")[2]
-        pubdate = datetime(year, month, day, hour, minute, second)
+        day = pubdate.split(" ")[1]
+        month = pubdate.split(" ")[2]
+        year = pubdate.split(" ")[3]
+        hour = pubdate.split(" ")[4].split(":")[0]
+        minute = pubdate.split(" ")[4].split(":")[1]
+        second = pubdate.split(" ")[4].split(":")[2]
+        pubdate = datetime(int(year), cast_months[month], int(day), int(hour), int(minute), int(second))
         if not persistence.see_if_update_exists(title, pubdate):
             new_updates.insert(0, entry)
             persistence.add_update(title, pubdate)
