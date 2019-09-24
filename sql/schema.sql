@@ -43,4 +43,16 @@ CREATE TABLE History(
   PRIMARY KEY (toon, event_date, event_time)
 );
 
+CREATE TABLE Updates(
+  title VARCHAR,
+  update_time DATE,
+  PRIMARY KEY (title, update_time)
+);
+
+CREATE TABLE News(
+  title VARCHAR,
+  news_time DATE,
+  PRIMARY KEY (title, news_time)
+);
+
 COMMIT;
