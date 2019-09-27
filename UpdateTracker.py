@@ -40,7 +40,7 @@ cast_months = {
 def check_for_updates():
     print("expire")
     global refreshTimer
-    refreshTimer = Timer(3600, check_for_updates)
+    refreshTimer = Timer(86400, check_for_updates)
     refreshTimer.start()
 
     new_news = list()
@@ -50,7 +50,6 @@ def check_for_updates():
         title = escape_special_characters(entry["title"])
         pubdate = entry["published"]
         pubdate = pubdate.split(",")[1]
-        print(pubdate)
         day = pubdate.split(" ")[1]
         month = pubdate.split(" ")[2]
         year = pubdate.split(" ")[3]
@@ -94,7 +93,7 @@ def check_for_updates():
 
 def initialise_update_tracker(news, update):
     global refreshTimer
-    refreshTimer = Timer(10, check_for_updates)
+    refreshTimer = Timer(60, check_for_updates)
     refreshTimer.start()
 
     global news_channel
@@ -109,5 +108,4 @@ def escape_special_characters(text):
         if text[index] == "'":
             text = text[:index] + "\\" + text[index:]
             index += 1
-    print(text)
     return text
