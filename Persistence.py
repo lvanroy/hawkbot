@@ -183,7 +183,7 @@ class Persistence:
     # ~~~~~~~~~~~~~~~~~~~~ News ~~~~~~~~~~~~~~~~~~~~
     def see_if_news_exists(self, title, time):
         cursor = self.connection.cursor()
-        cursor.execute("SELECT * from \"news\" WHERE title = '{}' AND  news_time = '{}'".format(title, time))
+        cursor.execute("SELECT * from \"news\" WHERE title = E'{}' AND  news_time = '{}'".format(title, time))
         result = cursor.fetchone()
         if not result:
             return False
@@ -197,7 +197,7 @@ class Persistence:
     # ~~~~~~~~~~~~~~~~~~~~ Updates ~~~~~~~~~~~~~~~~~~~~
     def see_if_update_exists(self, title, time):
         cursor = self.connection.cursor()
-        cursor.execute("SELECT * from \"updates\" WHERE title = '{}'AND  update_time = '{}'".format(title, time))
+        cursor.execute("SELECT * from \"updates\" WHERE title = E'{}'AND  update_time = '{}'".format(title, time))
         result = cursor.fetchone()
         if not result:
             return False

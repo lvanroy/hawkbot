@@ -14,12 +14,13 @@ token = f.read().split("\n")[0]
 user_tracker = UserTracker()
 
 client = discord.Client()
-loop = asyncio.new_event_loop()
-asyncio.set_event_loop(loop)
 
 
 @client.event
 async def on_ready():
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+
     bot_channel = client.get_channel(623893978273808404)
     initialise_timers(bot_channel)
 
@@ -64,6 +65,7 @@ async def on_message(message):
                      "!toons overview <family>\n" \
                      "\nUse the following commands to set respective gear variables:\n" + \
                      "!gear set <variable> <value> <toon>\n" + \
+                     "!gear set <ap> <aap> <dp> <toon>\n" + \
                      "Variable can either be ap, aap or dp\n" + \
                      "\nUse the following commands to set respective skill variables:\n" \
                      "skill levels are represented in numerical form (aka apprentice 5 = 15)\n" + \
@@ -183,9 +185,17 @@ async def on_message(message):
             channel = message.channel
             if len(arguments) == 5:
                 toon = arguments[-1]
-                ap = arguments[-2]
+                value = arguments[-2]
                 variable = arguments[-3]
-                user_tracker.set_gear_variable(channel, ap, toon, variable)
+                user_tracker.set_gear_variable(channel, value, toon, variable)
+            elif len(arguments) == 6:
+                toon = arguments[-1]
+                dp = arguments[-2]
+                aap = arguments[-3]
+                ap = arguments[-4]
+                user_tracker.set_gear_variable(channel, dp, toon, "dp")
+                user_tracker.set_gear_variable(channel, aap, toon, "aap")
+                user_tracker.set_gear_variable(channel, ap, toon, "ap")
             else:
                 await alert_for_incorrect_format(channel)
             return

@@ -18,8 +18,7 @@ update_channel = None
 
 persistence = Persistence()
 
-loop = asyncio.new_event_loop()
-asyncio.set_event_loop(loop)
+loop = asyncio.get_event_loop()
 
 cast_months = {
     "Jan": 1,
@@ -38,7 +37,6 @@ cast_months = {
 
 
 def check_for_updates():
-    print("expire")
     global refreshTimer
     refreshTimer = Timer(86400, check_for_updates)
     refreshTimer.start()
@@ -104,8 +102,7 @@ def initialise_update_tracker(news, update):
 
 
 def escape_special_characters(text):
-    for index in range(len(text)):
+    for index in reversed(range(len(text))):
         if text[index] == "'":
             text = text[:index] + "\\" + text[index:]
-            index += 1
     return text

@@ -205,9 +205,7 @@ start_time = dict()
 notified = dict()
 
 channel = None
-
-loop = asyncio.new_event_loop()
-asyncio.set_event_loop(loop)
+loop = asyncio.get_event_loop()
 
 
 def initialise_timers(bot_channel):
