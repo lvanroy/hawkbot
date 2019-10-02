@@ -40,10 +40,6 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    print("We received a message from " +
-          message.author.name + ": " +
-          message.content)
-
     # ensure that the boss is only active in its respective channel(s)
     if str(message.channel) != "botspam" and str(message.channel) != "request-roles":
         return
