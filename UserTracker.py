@@ -93,8 +93,6 @@ class UserTracker:
         if persistence.check_if_toon_exists(toon):
             persistence.set_toon_level(toon, level, xp_percentage)
             result = persistence.get_toon_level(toon)
-            print(str(result[0]) == level)
-            print(float(result[1]) == float(xp_percentage))
             if str(result[0]) == level and float(result[1]) == float(xp_percentage):
                 asyncio.ensure_future(channel.send("Success: the level was successfully updated."))
             else:

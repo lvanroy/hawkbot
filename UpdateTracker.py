@@ -22,6 +22,7 @@ loop = asyncio.get_event_loop()
 
 
 def check_for_updates():
+    print("update refresh\n")
     global refreshTimer
     refreshTimer = Timer(86400, check_for_updates)
     refreshTimer.start()
