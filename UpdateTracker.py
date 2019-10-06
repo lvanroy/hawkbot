@@ -20,21 +20,6 @@ persistence = Persistence()
 
 loop = asyncio.get_event_loop()
 
-cast_months = {
-    "Jan": 1,
-    "Feb": 2,
-    "Mar": 3,
-    "Apr": 4,
-    "May": 5,
-    "Jun": 6,
-    "Jul": 7,
-    "Aug": 8,
-    "Sep": 9,
-    "Oct": 10,
-    "Nov": 11,
-    "Dec": 12
-}
-
 
 def check_for_updates():
     global refreshTimer
@@ -46,18 +31,10 @@ def check_for_updates():
 
     for entry in newsParser.entries:
         title = escape_special_characters(entry["title"])
-        pubdate = entry["published"]
-        pubdate = pubdate.split(",")[1]
-        day = pubdate.split(" ")[1]
-        month = pubdate.split(" ")[2]
-        year = pubdate.split(" ")[3]
-        hour = pubdate.split(" ")[4].split(":")[0]
-        minute = pubdate.split(" ")[4].split(":")[1]
-        second = pubdate.split(" ")[4].split(":")[2]
-        pubdate = datetime(int(year), cast_months[month], int(day), int(hour), int(minute), int(second))
-        if not persistence.see_if_news_exists(title, pubdate):
+        url = escape_special_characters(entry["link"])
+        if not persistence.see_if_news_exists(title, url):
             new_news.insert(0, entry)
-            persistence.add_news(title, pubdate)
+            persistence.add_news(title, url)
         else:
             break
 
@@ -68,18 +45,10 @@ def check_for_updates():
 
     for entry in updateParser.entries:
         title = escape_special_characters(entry["title"])
-        pubdate = entry["published"]
-        pubdate = pubdate.split(",")[1]
-        day = pubdate.split(" ")[1]
-        month = pubdate.split(" ")[2]
-        year = pubdate.split(" ")[3]
-        hour = pubdate.split(" ")[4].split(":")[0]
-        minute = pubdate.split(" ")[4].split(":")[1]
-        second = pubdate.split(" ")[4].split(":")[2]
-        pubdate = datetime(int(year), cast_months[month], int(day), int(hour), int(minute), int(second))
-        if not persistence.see_if_update_exists(title, pubdate):
+        url = escape_special_characters(entry["link"])
+        if not persistence.see_if_update_exists(title, url):
             new_updates.insert(0, entry)
-            persistence.add_update(title, pubdate)
+            persistence.add_update(title, url)
         else:
             break
 

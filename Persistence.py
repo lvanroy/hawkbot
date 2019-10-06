@@ -181,31 +181,31 @@ class Persistence:
         return result
 
     # ~~~~~~~~~~~~~~~~~~~~ News ~~~~~~~~~~~~~~~~~~~~
-    def see_if_news_exists(self, title, time):
+    def see_if_news_exists(self, title, url):
         cursor = self.connection.cursor()
-        cursor.execute("SELECT * from \"news\" WHERE title = E'{}' AND  news_time = '{}'".format(title, time))
+        cursor.execute("SELECT * from \"news\" WHERE title = E'{}' AND  url = '{}'".format(title, url))
         result = cursor.fetchone()
         if not result:
             return False
         return True
 
-    def add_news(self, title, time):
+    def add_news(self, title, url):
         cursor = self.connection.cursor()
-        cursor.execute("INSERT INTO \"news\" (title, news_time) VALUES (E'{}', '{}')".format(title, time))
+        cursor.execute("INSERT INTO \"news\" (title, url) VALUES (E'{}', '{}')".format(title, url))
         self.connection.commit()
 
     # ~~~~~~~~~~~~~~~~~~~~ Updates ~~~~~~~~~~~~~~~~~~~~
-    def see_if_update_exists(self, title, time):
+    def see_if_update_exists(self, title, url):
         cursor = self.connection.cursor()
-        cursor.execute("SELECT * from \"updates\" WHERE title = E'{}'AND  update_time = '{}'".format(title, time))
+        cursor.execute("SELECT * from \"updates\" WHERE title = E'{}'AND  url = '{}'".format(title, url))
         result = cursor.fetchone()
         if not result:
             return False
         return True
 
-    def add_update(self, title, time):
+    def add_update(self, title, url):
         cursor = self.connection.cursor()
-        cursor.execute("INSERT INTO \"updates\" (title, update_time) VALUES (E'{}', '{}')".format(title, time))
+        cursor.execute("INSERT INTO \"updates\" (title, url) VALUES (E'{}', '{}')".format(title, url))
         self.connection.commit()
 
     # ~~~~~~~~~~~~~~~~~~~~ General ~~~~~~~~~~~~~~~~~~~~
