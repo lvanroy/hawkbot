@@ -10,8 +10,6 @@ news_and_anouncements = "https://community.blackdesertonline.com/index.php?forum
 updates = "https://community.blackdesertonline.com/index.php?forums/patch-notes.5/index.rss"
 
 refreshTimer = None
-newsParser = feedparser.parse(news_and_anouncements)
-updateParser = feedparser.parse(updates)
 
 news_channel = None
 update_channel = None
@@ -21,7 +19,11 @@ persistence = Persistence()
 loop = asyncio.get_event_loop()
 
 
-def check_for_updates():
+def check_for_updates():    
+    newsParser = feedparser.parse(news_and_anouncements)
+    updateParser = feedparser.parse(updates)
+
+
     print("update refresh\n")
     global refreshTimer
     refreshTimer = Timer(86400, check_for_updates)
