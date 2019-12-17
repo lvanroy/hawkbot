@@ -23,10 +23,9 @@ def check_for_updates():
     newsParser = feedparser.parse(news_and_anouncements)
     updateParser = feedparser.parse(updates)
 
-
     print("update refresh\n")
     global refreshTimer
-    refreshTimer = Timer(86400, check_for_updates)
+    refreshTimer = Timer(3600, check_for_updates)
     refreshTimer.start()
 
     new_news = list()
