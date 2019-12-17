@@ -346,7 +346,7 @@ async def print_timers(spamchannel, boss=None):
 def get_curent_time():
     now = datetime.utcnow()
     weekday = now.weekday()*24*60*60
-    hours = (int(now.strftime("%H"))+2)*60*60
+    hours = (int(now.strftime("%H"))+1)*60*60
     minutes = int(now.strftime("%M"))*60
     seconds = int(now.strftime("%S"))
     current_time = (weekday + hours + minutes + seconds) % 604800
