@@ -289,7 +289,7 @@ def check_remaining_time(boss_spawn_times, current_time):
     time_remaining = None
     for i in range(len(boss_spawn_times)):
         spawn_time = boss_spawn_times[i]
-        if spawn_time > current_time and spawn_time-current_time > 60:
+        if spawn_time > current_time and spawn_time-current_time > 7100:
             time_remaining = spawn_time - current_time
             break
 
