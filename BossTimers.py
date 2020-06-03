@@ -32,6 +32,7 @@ def check_advanced_notice():
             hour_notifier = Timer(seconds, notify_in_advance, [key, 60])
             hour_notifier.start()
             notified[key][0] = True
+            notified[key[3] = False
 
         if hours == 0 and minutes == 30 and channel is not None and not notified[key][1]:
             half_hour_notifier = Timer(seconds, notify_in_advance, [key, 30])
@@ -50,123 +51,131 @@ def notify_in_advance(boss, period):
 
 
 def notify_karanda():
-    if channel is not None:
-        asyncio.run_coroutine_threadsafe(channel.send("<@&605835920477913090> Karanda has spawned!"), loop)
+    if not notified["Karanda"][3]:
+        if channel is not None:
+            asyncio.run_coroutine_threadsafe(channel.send("<@&605835920477913090> Karanda has spawned!"), loop)
 
-    current_time = get_curent_time()
+        current_time = get_curent_time()
 
-    time_remaining = check_remaining_time(karanda, current_time)
-    karanda_timer = Timer(time_remaining, notify_karanda)
-    karanda_timer.start()
-    timers["Karanda"] = karanda_timer
-    remaining_time["Karanda"] = time_remaining
-    start_time["Karanda"] = time.time()
-    notified["Karanda"] = [False, False, False]
+        time_remaining = check_remaining_time(karanda, current_time)
+        karanda_timer = Timer(time_remaining, notify_karanda)
+        karanda_timer.start()
+        timers["Karanda"] = karanda_timer
+        remaining_time["Karanda"] = time_remaining
+        start_time["Karanda"] = time.time()
+        notified["Karanda"] = [False, False, False, True]
 
 
 def notify_kutum():
-    if channel is not None:
-        asyncio.run_coroutine_threadsafe(channel.send("<@&605835798901817354> Kutum has spawned!"), loop)
+    if not notified["Kutum"][3]:
+        if channel is not None:
+            asyncio.run_coroutine_threadsafe(channel.send("<@&605835798901817354> Kutum has spawned!"), loop)
 
-    current_time = get_curent_time()
+        current_time = get_curent_time()
 
-    time_remaining = check_remaining_time(kutum, current_time)
-    kutum_timer = Timer(time_remaining, notify_kutum)
-    kutum_timer.start()
-    timers["Kutum"] = kutum_timer
-    remaining_time["Kutum"] = time_remaining
-    start_time["Kutum"] = time.time()
-    notified["Kutum"] = [False, False, False]
+        time_remaining = check_remaining_time(kutum, current_time)
+        kutum_timer = Timer(time_remaining, notify_kutum)
+        kutum_timer.start()
+        timers["Kutum"] = kutum_timer
+        remaining_time["Kutum"] = time_remaining
+        start_time["Kutum"] = time.time()
+        notified["Kutum"] = [False, False, False, True]
 
 
 def notify_kzarka():
-    if channel is not None:
-        asyncio.run_coroutine_threadsafe(channel.send("<@&605835785907863601> Kzarka has spawned!"), loop)
+    if not notified["Kzarka"][3]:
+        if channel is not None:
+            asyncio.run_coroutine_threadsafe(channel.send("<@&605835785907863601> Kzarka has spawned!"), loop)
 
-    current_time = get_curent_time()
+        current_time = get_curent_time()
 
-    time_remaining = check_remaining_time(kzarka, current_time)
-    kzarka_timer = Timer(time_remaining, notify_kzarka)
-    kzarka_timer.start()
-    timers["Kzarka"] = kzarka_timer
-    remaining_time["Kzarka"] = time_remaining
-    start_time["Kzarka"] = time.time()
-    notified["Kzarka"] = [False, False, False]
+        time_remaining = check_remaining_time(kzarka, current_time)
+        kzarka_timer = Timer(time_remaining, notify_kzarka)
+        kzarka_timer.start()
+        timers["Kzarka"] = kzarka_timer
+        remaining_time["Kzarka"] = time_remaining
+        start_time["Kzarka"] = time.time()
+        notified["Kzarka"] = [False, False, False, True]
 
 
 def notify_offin():
-    if channel is not None:
-        asyncio.run_coroutine_threadsafe(channel.send("<@&605835946184802304> Offin has spawned!"), loop)
+    if not notified["Offin"][3]:
+        if channel is not None:
+            asyncio.run_coroutine_threadsafe(channel.send("<@&605835946184802304> Offin has spawned!"), loop)
 
-    current_time = get_curent_time()
+        current_time = get_curent_time()
 
-    time_remaining = check_remaining_time(offin, current_time)
-    offin_timer = Timer(time_remaining, notify_offin)
-    offin_timer.start()
-    timers["Offin"] = offin_timer
-    remaining_time["Offin"] = time_remaining
-    start_time["Offin"] = time.time()
-    notified["Offin"] = [False, False, False]
+        time_remaining = check_remaining_time(offin, current_time)
+        offin_timer = Timer(time_remaining, notify_offin)
+        offin_timer.start()
+        timers["Offin"] = offin_timer
+        remaining_time["Offin"] = time_remaining
+        start_time["Offin"] = time.time()
+        notified["Offin"] = [False, False, False, True]
 
 
 def notify_nouver():
-    if channel is not None:
-        asyncio.run_coroutine_threadsafe(channel.send("<@&605835974693617664> Nouver has spawned!"), loop)
+    if not notified["Nouver"][3]:
+        if channel is not None:
+            asyncio.run_coroutine_threadsafe(channel.send("<@&605835974693617664> Nouver has spawned!"), loop)
 
-    current_time = get_curent_time()
+        current_time = get_curent_time()
 
-    time_remaining = check_remaining_time(nouver, current_time)
-    nouver_timer = Timer(time_remaining, notify_nouver)
-    nouver_timer.start()
-    timers["Nouver"] = nouver_timer
-    remaining_time["Nouver"] = time_remaining
-    start_time["Nouver"] = time.time()
-    notified["Nouver"] = [False, False, False]
+        time_remaining = check_remaining_time(nouver, current_time)
+        nouver_timer = Timer(time_remaining, notify_nouver)
+        nouver_timer.start()
+        timers["Nouver"] = nouver_timer
+        remaining_time["Nouver"] = time_remaining
+        start_time["Nouver"] = time.time()
+        notified["Nouver"] = [False, False, False, True]
 
 
 def notify_garmoth():
-    if channel is not None:
-        asyncio.run_coroutine_threadsafe(channel.send("<@&605836079504818176> Garmoth has spawned!"), loop)
+    if not notified["Garmoth"][3]:
+        if channel is not None:
+            asyncio.run_coroutine_threadsafe(channel.send("<@&605836079504818176> Garmoth has spawned!"), loop)
 
-    current_time = get_curent_time()
+        current_time = get_curent_time()
 
-    time_remaining = check_remaining_time(garmoth, current_time)
-    garmoth_timer = Timer(time_remaining, notify_garmoth)
-    garmoth_timer.start()
-    timers["Garmoth"] = garmoth_timer
-    remaining_time["Garmoth"] = time_remaining
-    start_time["Garmoth"] = time.time()
-    notified["Garmoth"] = [False, False, False]
+        time_remaining = check_remaining_time(garmoth, current_time)
+        garmoth_timer = Timer(time_remaining, notify_garmoth)
+        garmoth_timer.start()
+        timers["Garmoth"] = garmoth_timer
+        remaining_time["Garmoth"] = time_remaining
+        start_time["Garmoth"] = time.time()
+        notified["Garmoth"] = [False, False, False, True]
 
 
 def notify_quint_and_muraka():
-    if channel is not None:
-        asyncio.run_coroutine_threadsafe(channel.send("<@&605836116033273858> Quint and Muraka have spawned!"), loop)
+    if not notified["Quint And Muraka"][3]:
+        if channel is not None:
+            asyncio.run_coroutine_threadsafe(channel.send("<@&605836116033273858> Quint and Muraka have spawned!"), loop)
 
-    current_time = get_curent_time()
+        current_time = get_curent_time()
 
-    time_remaining = check_remaining_time(quint_and_muraka, current_time)
-    quint_and_muraka_timer = Timer(time_remaining, notify_quint_and_muraka)
-    quint_and_muraka_timer.start()
-    timers["Quint And Muraka"] = quint_and_muraka_timer
-    remaining_time["Quint And Muraka"] = time_remaining
-    start_time["Quint And Muraka"] = time.time()
-    notified["Quint And Muraka"] = [False, False, False]
+        time_remaining = check_remaining_time(quint_and_muraka, current_time)
+        quint_and_muraka_timer = Timer(time_remaining, notify_quint_and_muraka)
+        quint_and_muraka_timer.start()
+        timers["Quint And Muraka"] = quint_and_muraka_timer
+        remaining_time["Quint And Muraka"] = time_remaining
+        start_time["Quint And Muraka"] = time.time()
+        notified["Quint And Muraka"] = [False, False, False, True]
 
 
 def notify_vell():
-    if channel is not None:
-        asyncio.run_coroutine_threadsafe(channel.send("<@&605836162824929280> Vell has spawned"), loop)
+    if not notified["Vell"][3]:
+        if channel is not None:
+            asyncio.run_coroutine_threadsafe(channel.send("<@&605836162824929280> Vell has spawned"), loop)
 
-    current_time = get_curent_time()
+        current_time = get_curent_time()
 
-    time_remaining = check_remaining_time(vell, current_time)
-    vell_timer = Timer(time_remaining, notify_vell)
-    vell_timer.start()
-    timers["Vell"] = vell_timer
-    remaining_time["Vell"] = time_remaining
-    start_time["Vell"] = time.time()
-    notified["Vell"] = [False, False, False]
+        time_remaining = check_remaining_time(vell, current_time)
+        vell_timer = Timer(time_remaining, notify_vell)
+        vell_timer.start()
+        timers["Vell"] = vell_timer
+        remaining_time["Vell"] = time_remaining
+        start_time["Vell"] = time.time()
+        notified["Vell"] = [False, False, False, True]
 
 
 # spawn times in seconds for each boss
@@ -224,7 +233,7 @@ def initialise_timers(bot_channel):
     timers["Karanda"] = karanda_timer
     remaining_time["Karanda"] = time_remaining
     start_time["Karanda"] = time.time()
-    notified["Karanda"] = [False, False, False]
+    notified["Karanda"] = [False, False, False, False]
 
     time_remaining = check_remaining_time(kutum, current_time)
     kutum_timer = Timer(time_remaining, notify_kutum)
@@ -232,7 +241,7 @@ def initialise_timers(bot_channel):
     timers["Kutum"] = kutum_timer
     remaining_time["Kutum"] = time_remaining
     start_time["Kutum"] = time.time()
-    notified["Kutum"] = [False, False, False]
+    notified["Kutum"] = [False, False, False, False]
 
     time_remaining = check_remaining_time(kzarka, current_time)
     kzarka_timer = Timer(time_remaining, notify_kzarka)
@@ -240,7 +249,7 @@ def initialise_timers(bot_channel):
     timers["Kzarka"] = kzarka_timer
     remaining_time["Kzarka"] = time_remaining
     start_time["Kzarka"] = time.time()
-    notified["Kzarka"] = [False, False, False]
+    notified["Kzarka"] = [False, False, False, False]
 
     time_remaining = check_remaining_time(offin, current_time)
     offin_timer = Timer(time_remaining, notify_offin)
@@ -248,7 +257,7 @@ def initialise_timers(bot_channel):
     timers["Offin"] = offin_timer
     remaining_time["Offin"] = time_remaining
     start_time["Offin"] = time.time()
-    notified["Offin"] = [False, False, False]
+    notified["Offin"] = [False, False, False, False]
 
     time_remaining = check_remaining_time(nouver, current_time)
     nouver_timer = Timer(time_remaining, notify_nouver)
@@ -256,7 +265,7 @@ def initialise_timers(bot_channel):
     timers["Nouver"] = nouver_timer
     remaining_time["Nouver"] = time_remaining
     start_time["Nouver"] = time.time()
-    notified["Nouver"] = [False, False, False]
+    notified["Nouver"] = [False, False, False, False]
 
     time_remaining = check_remaining_time(garmoth, current_time)
     garmoth_timer = Timer(time_remaining, notify_garmoth)
@@ -264,7 +273,7 @@ def initialise_timers(bot_channel):
     timers["Garmoth"] = garmoth_timer
     remaining_time["Garmoth"] = time_remaining
     start_time["Garmoth"] = time.time()
-    notified["Garmoth"] = [False, False, False]
+    notified["Garmoth"] = [False, False, False, False]
 
     time_remaining = check_remaining_time(quint_and_muraka, current_time)
     quint_and_muraka_timer = Timer(time_remaining, notify_quint_and_muraka)
@@ -272,7 +281,7 @@ def initialise_timers(bot_channel):
     timers["Quint And Muraka"] = quint_and_muraka_timer
     remaining_time["Quint And Muraka"] = time_remaining
     start_time["Quint And Muraka"] = time.time()
-    notified["Quint And Muraka"] = [False, False, False]
+    notified["Quint And Muraka"] = [False, False, False, False]
 
     time_remaining = check_remaining_time(vell, current_time)
     vell_timer = Timer(time_remaining, notify_vell)
@@ -280,7 +289,7 @@ def initialise_timers(bot_channel):
     timers["Vell"] = vell_timer
     remaining_time["Vell"] = time_remaining
     start_time["Vell"] = time.time()
-    notified["Vell"] = [False, False, False]
+    notified["Vell"] = [False, False, False, False]
 
     return
 
