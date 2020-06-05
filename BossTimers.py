@@ -32,7 +32,7 @@ def check_advanced_notice():
             hour_notifier = Timer(seconds, notify_in_advance, [key, 60])
             hour_notifier.start()
             notified[key][0] = True
-            notified[key[3] = False
+            notified[key][3] = False
 
         if hours == 0 and minutes == 30 and channel is not None and not notified[key][1]:
             half_hour_notifier = Timer(seconds, notify_in_advance, [key, 30])
