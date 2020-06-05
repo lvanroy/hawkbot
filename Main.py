@@ -8,7 +8,7 @@ from UpdateTracker import initialise_update_tracker
 
 from discord.utils import get
 
-f = open("token.txt", 'r')
+f = open("/home/pi/hawkbot/scripts/token.txt", 'r')
 token = f.read().split("\n")[0]
 
 user_tracker = UserTracker()
