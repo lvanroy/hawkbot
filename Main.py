@@ -5,6 +5,7 @@ import asyncio
 from BossTimers import initialise_timers, print_timers
 from UserTracker import UserTracker
 from UpdateTracker import initialise_update_tracker
+from Distractions import get_joke_categories, get_joke
 
 from discord.utils import get
 
@@ -41,7 +42,8 @@ async def on_message(message):
         return
 
     # ensure that the boss is only active in its respective channel(s)
-    if str(message.channel) != "botspam" and str(message.channel) != "request-roles":
+    if str(message.channel) != "botspam" and str(message.channel) != "request-roles" and \
+            str(message.channel) != "jokes-and-funny-stuff":
         return
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -359,6 +361,34 @@ async def on_message(message):
             await message.channel.send(output)
             return
 
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DISTRACTIONS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    elif str(message.channel) == "jokes-and-funny-stuff":
+        if message.content == "!joke categories":
+            await message.channel.send(get_joke_categories())
+            return
+
+        elif message.content.startswith("!joke get"):
+            arguments = message.content.split(" ")
+            if len(arguments) == 3:
+                await message.channel.send(get_joke(arguments[-1]))
+            else:
+                await alert_for_incorrect_format(message.channel)
+            return
+
+        elif message.content == "!help":
+            output = "This channel is used for jokes and memes.\nCurrently the only feature is the request of potential " \
+                     "joke categories, and the request of the joke itself, along with the desired joke category.\n" \
+                     "!joke categories\n" \
+                     "!joke get <category>\n"
+            await message.channel.send(output)
+            return
+
+        elif message.content.startswith("!"):
+            output = "Command not recognized, use !help to get a list of available commands!"
+            await message.channel.send(output)
+            return
 
 async def alert_for_incorrect_format(channel):
     await channel.send("Incorrect format, use !help to check the available commands!")
