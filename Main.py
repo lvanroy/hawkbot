@@ -383,7 +383,9 @@ async def on_message(message):
 
         elif message.content.startswith("!meme get"):
             arguments = message.content.split(" ")
-            if len(arguments) == 3:
+            categories = ["hot", "funny", "animals", "awesome", "car", "gaming", "wtf", "politics", "meme", "darkhumor"
+                          "satisfying"]
+            if len(arguments) == 3 and arguments[-1] in categories:
                 await message.channel.send(get_meme(arguments[-1]))
             else:
                 await alert_for_incorrect_format(message.channel)
@@ -393,7 +395,7 @@ async def on_message(message):
             output = "The following categories are currently supported: \n" \
                      "\t hot\n" \
                      "\t funny\n" \
-                     "\t annimals\n" \
+                     "\t animals\n" \
                      "\t awesome\n" \
                      "\t car\n" \
                      "\t gaming\n" \
