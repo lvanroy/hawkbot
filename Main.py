@@ -5,11 +5,13 @@ import asyncio
 from BossTimers import initialise_timers, print_timers
 from UserTracker import UserTracker
 from UpdateTracker import initialise_update_tracker
-from Distractions import get_joke_categories, get_joke
+from Distractions import get_joke_categories, get_joke, get_meme
+
+from os import system, path
 
 from discord.utils import get
 
-f = open("/home/pi/hawkbot/scripts/token.txt", 'r')
+f = open("./token.txt", 'r')
 token = f.read().split("\n")[0]
 
 user_tracker = UserTracker()
@@ -22,7 +24,10 @@ async def on_ready():
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
 
-    bot_channel = client.get_channel(623893978273808404)
+    if not path.exists("../skraper-master/cli/target"):
+        system('cd ../skraper-master;./mvnw clean package -DskipTests=true ')
+
+    bot_channel = client.get_channel(468140855228891147)
     initialise_timers(bot_channel)
 
     update_channel = client.get_channel(626063347854606337)
@@ -302,7 +307,6 @@ async def on_message(message):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ROLES ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     elif str(message.channel) == "request-roles":
-        print(message.content)
         # give the users an option to see which commands are available
         if message.content == "!help":
             output = "This channel is used to request roles.\nAll roles can be requested by using the " \
@@ -377,11 +381,36 @@ async def on_message(message):
                 await alert_for_incorrect_format(message.channel)
             return
 
+        elif message.content.startswith("!meme get"):
+            arguments = message.content.split(" ")
+            if len(arguments) == 3:
+                await message.channel.send(get_meme(arguments[-1]))
+            else:
+                await alert_for_incorrect_format(message.channel)
+            return
+
+        elif message.content == "!meme categories":
+            output = "The following categories are currently supported: \n" \
+                     "\t hot\n" \
+                     "\t funny\n" \
+                     "\t annimals\n" \
+                     "\t awesome\n" \
+                     "\t car\n" \
+                     "\t gaming\n" \
+                     "\t wtf\n" \
+                     "\t politics\n" \
+                     "\t meme\n" \
+                     "\t darkhumor\n" \
+                     "\t satisfying"
+            await message.channel.send(output)
+            return
+
         elif message.content == "!help":
-            output = "This channel is used for jokes and memes.\nCurrently the only feature is the request of potential " \
-                     "joke categories, and the request of the joke itself, along with the desired joke category.\n" \
+            output = "This channel is used for jokes and memes.\n" \
                      "!joke categories\n" \
-                     "!joke get <category>\n"
+                     "!joke get <category>\n" \
+                     "!meme categories\n" \
+                     "!meme get <category>"
             await message.channel.send(output)
             return
 

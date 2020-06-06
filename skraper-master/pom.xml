@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>ru.sokomishalov.skraper</groupId>
+    <artifactId>skraper-parent</artifactId>
+    <version>0.4.4</version>
+    <packaging>pom</packaging>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <kotlin.version>1.3.72</kotlin.version>
+        <kotlinx-coroutines.version>1.3.7</kotlinx-coroutines.version>
+        <jackson.version>2.11.0</jackson.version>
+        <jsoup.version>1.13.1</jsoup.version>
+        <reactor-netty.version>0.9.7.RELEASE</reactor-netty.version>
+        <okhttp.version>4.7.2</okhttp.version>
+        <spring.version>5.2.6.RELEASE</spring.version>
+        <ktor.version>1.3.2</ktor.version>
+        <argparser.version>2.0.7</argparser.version>
+        <logback.version>1.2.3</logback.version>
+    </properties>
+
+    <modules>
+        <module>skrapers</module>
+        <module>cli</module>
+    </modules>
+
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+        <repository>
+            <id>jcenter</id>
+            <url>https://jcenter.bintray.com/</url>
+        </repository>
+    </repositories>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <!-- mvn license:format -->
+                    <groupId>com.mycila</groupId>
+                    <artifactId>license-maven-plugin</artifactId>
+                    <version>3.0</version>
+                    <configuration>
+                        <header>header.txt</header>
+                        <includes>
+                            <include>**/*.kt</include>
+                        </includes>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+</project>
