@@ -289,11 +289,11 @@ async def on_message(message):
                 await alert_for_incorrect_format(message.channel)
             return
 
-        elif message.content.startswith("!praise"):
-            await message.channel.send("<@194853137096376320> Thank you for all the effort! Love the bot!")
-
         elif message.content.startswith("!praisebot"):
             await message.channel.send("<@604861929546317826> is the best bot ever!")
+
+        elif message.content.startswith("!praise"):
+            await message.channel.send("<@194853137096376320> Thank you for all the effort! Love the bot!")
 
         elif message.content.startswith("!github"):
             await message.channel.send("https://github.com/larsVanRoy/hawkbot")
