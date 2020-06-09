@@ -83,7 +83,7 @@ async def on_message(message):
                      " (boss tag is optional, if no tag is given, the timers for all bosses will be given)\n" + \
                      "\ngeneral non bdo related commands:\n" + \
                      "!dice <lower> <upper> (these bounds are optional)\n" + \
-                     "!praise\n" + \
+                     "!praise\n!praisebot\n" + \
                      "\nthe following command gives a link to the bots github:\n" + \
                      "!github"
 
@@ -291,6 +291,9 @@ async def on_message(message):
 
         elif message.content.startswith("!praise"):
             await message.channel.send("<@194853137096376320> Thank you for all the effort! Love the bot!")
+
+        elif message.content.startswith("!praisebot"):
+            await message.channel.send("<@604861929546317826> is the best bot ever!")
 
         elif message.content.startswith("!github"):
             await message.channel.send("https://github.com/larsVanRoy/hawkbot")
