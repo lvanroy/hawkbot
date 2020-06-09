@@ -383,7 +383,7 @@ async def on_message(message):
 
         elif message.content.startswith("!meme get"):
             arguments = message.content.split(" ")
-            categories = ["hot", "funny", "animals", "awesome", "car", "gaming", "wtf", "politics", "meme", "darkhumor"
+            categories = ["hot", "funny", "animals", "awesome", "car", "gaming", "wtf", "politics", "meme", "darkhumor",
                           "satisfying"]
             if len(arguments) == 3 and arguments[-1] in categories:
                 await message.channel.send(get_meme(arguments[-1]))
