@@ -26,4 +26,5 @@ def get_meme(category):
     data = json.load(f)
     f.close()
     system('rm ../skraper-master/ninegag/*')
-    return data[choice(range(len(data)))]["media"][0]["url"]
+    selection = data[choice(range(len(data)))]
+    return "{}\n{}".format(selection["text"], selection["media"][0]["url"])
