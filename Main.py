@@ -27,7 +27,7 @@ async def on_ready():
     if not path.exists("../skraper-master/cli/target"):
         system('cd ../skraper-master;./mvnw clean package -DskipTests=true ')
 
-    bot_channel = client.get_channel(623893978273808404)
+    bot_channel = client.get_channel(605023656132739110)
     initialise_timers(bot_channel)
 
     update_channel = client.get_channel(626063347854606337)
