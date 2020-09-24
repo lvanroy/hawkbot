@@ -365,7 +365,7 @@ async def on_message(message):
             arguments = message.content.split(" ")
             if len(arguments) == 3:
                 admin_commands.add_activity(arguments[1], arguments[2], message.channel)
-                await message.channel.send("successfully renewed!")
+                await message.channel.send("successfully registered!")
             else:
                 await alert_for_incorrect_format(message.channel)
 
