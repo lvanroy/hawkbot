@@ -353,17 +353,19 @@ async def on_message(message):
             await message.channel.send(admin_commands.compute_payout_values())
             return
 
-        elif message.content == "!renew":
+        elif message.content.startswith("!renew"):
             arguments = message.content.split(" ")
             if len(arguments) == 3:
                 admin_commands.register_renewal(arguments[1], arguments[2], message.channel)
+                await message.channel.send("successfully renewed!")
             else:
                 await alert_for_incorrect_format(message.channel)
 
-        elif message.content == "!register":
+        elif message.content.startswith("!register"):
             arguments = message.content.split(" ")
             if len(arguments) == 3:
                 admin_commands.add_activity(arguments[1], arguments[2], message.channel)
+                await message.channel.send("successfully renewed!")
             else:
                 await alert_for_incorrect_format(message.channel)
 
