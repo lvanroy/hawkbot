@@ -62,12 +62,12 @@ class Persistence:
             return False
         return True
 
-    def add_toon(self, toon, family, toon_class, level, xp):
+    def add_toon(self, toon, family, toon_class, planner_url):
         cursor = self.connection.cursor()
         try:
-            cursor.execute("INSERT INTO \"toons\"(name, family, class, level, xp) "
-                           "VALUES (\'{}\', \'{}\', \'{}\', {}, {})"
-                           .format(toon, family, toon_class, level, xp))
+            cursor.execute("INSERT INTO \"toons\"(name, family, class, url, level, xp) "
+                           "VALUES (\'{}\', \'{}\', \'{}\', \'{}\', {}, \'{}\')"
+                           .format(toon, family, toon_class, planner_url, 0, 0))
         except errors.lookup(FOREIGN_KEY_VIOLATION):
             raise
         self.connection.commit()
@@ -95,6 +95,11 @@ class Persistence:
         result = cursor.fetchone()
         return result
 
+    def set_toon_url(self, toon, url):
+        cursor = self.connection.cursor()
+        cursor.execute("UPDATE \"toons\" set url={} where name = '{}'"
+                       .format(url, toon))
+
     # ~~~~~~~~~~~~~~~~~~~~ Gear ~~~~~~~~~~~~~~~~~~~~
 
     def check_if_toon_exists_in_gear(self, toon):
@@ -107,7 +112,31 @@ class Persistence:
 
     def add_toon_to_gear(self, toon):
         cursor = self.connection.cursor()
-        cursor.execute("INSERT INTO \"gear\"(toon, dp, ap, aap) VALUES ('{}', 0, 0, 0)".format(toon))
+        cursor.execute("INSERT INTO \"gear\""
+                       "(toon, dp, ap, aap, hap, bap, baap, dr, drr, hdr, eva, heva, hp, acc, acrit, da, dm) "
+                       "VALUES ('{}', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)".format(toon))
+        self.connection.commit()
+
+    def set_gear_stats(self, toon, stats):
+        cursor = self.connection.cursor()
+        cursor.execute("UPDATE \"gear\" SET " +
+                       "{} = \'{}\', ".format("dp", stats["DP"]) +
+                       "{} = \'{}\', ".format("ap", stats["AP"]) +
+                       "{} = \'{}\', ".format("aap", stats["AAP"]) +
+                       "{} = \'{}\', ".format("hap", stats["HAP"]) +
+                       "{} = \'{}\', ".format("bap", stats["BAP"]) +
+                       "{} = \'{}\', ".format("baap", stats["BAAP"]) +
+                       "{} = \'{}\', ".format("dr", stats["DR"]) +
+                       "{} = \'{}\', ".format("drr", stats["DRR"]) +
+                       "{} = \'{}\', ".format("hdr", stats["HDR"]) +
+                       "{} = \'{}\', ".format("eva", stats["E"]) +
+                       "{} = \'{}\', ".format("heva", stats["HE"]) +
+                       "{} = \'{}\', ".format("hp", stats["MHP"]) +
+                       "{} = \'{}\', ".format("acc", stats["A"]) +
+                       "{} = \'{}\', ".format("acrit", stats["ACHD"]) +
+                       "{} = \'{}\', ".format("da", stats["EDAS"]) +
+                       "{} = \'{}\' ".format("dm", stats["EAPAM"]) +
+                       "WHERE toon=\'{}\'".format(toon))
         self.connection.commit()
 
     def set_gear_value(self, toon, value, variable):
@@ -207,6 +236,38 @@ class Persistence:
         cursor = self.connection.cursor()
         cursor.execute("INSERT INTO \"updates\" (title, url) VALUES (E'{}', '{}')".format(title, url))
         self.connection.commit()
+
+    # ~~~~~~~~~~~~~~~~~~~~ Activity ~~~~~~~~~~~~~~~~~~~~
+    def see_if_activity_exists(self, family):
+        cursor = self.connection.cursor()
+        cursor.execute("SELECT * from \"Activity\" WHERE family = E'{}'".format(family))
+        result = cursor.fetchone()
+        if not result:
+            return False
+        return True
+
+    def add_activity(self, family, activity):
+        cursor = self.connection.cursor()
+        cursor.execute("INSERT INTO \"Activity\" (family, activity, gained) VALUES (E'{}', {}, 0)"
+                       .format(family, activity))
+        self.connection.commit()
+
+    def register_renewal(self, family, current_activity):
+        cursor = self.connection.cursor()
+        cursor.execute("SELECT activity from \"Activity\" WHERE family = E'{}'".format(family))
+        result = cursor.fetchone()
+        cursor.execute("UPDATE \"Activity\" set activity = {}, gained = {} WHERE family = E'{}'"
+                       .format(current_activity, current_activity-result[0], family))
+        self.connection.commit()
+
+    def get_weekly_activities(self):
+        cursor = self.connection.cursor()
+        cursor.execute("SELECT family, gained from \"Activity\"")
+        result = cursor.fetchall()
+        cursor.execute("UPDATE \"Activity\" set gained = 0")
+        self.connection.commit()
+
+        return result
 
     # ~~~~~~~~~~~~~~~~~~~~ General ~~~~~~~~~~~~~~~~~~~~
 

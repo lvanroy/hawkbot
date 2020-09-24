@@ -6,6 +6,7 @@ from BossTimers import initialise_timers, print_timers
 from UserTracker import UserTracker
 from UpdateTracker import initialise_update_tracker
 from Distractions import get_joke_categories, get_joke, get_meme
+from AdminCommands import AdminCommands
 
 from os import system, path
 
@@ -18,6 +19,11 @@ user_tracker = UserTracker()
 
 client = discord.Client()
 
+bot_channel = client.get_channel(605023656132739110)
+initialise_timers(bot_channel)
+
+admin_commands = AdminCommands()
+
 
 @client.event
 async def on_ready():
@@ -26,9 +32,6 @@ async def on_ready():
 
     if not path.exists("../skraper-master/cli/target"):
         system('cd ../skraper-master;./mvnw clean package -DskipTests=true ')
-
-    bot_channel = client.get_channel(605023656132739110)
-    initialise_timers(bot_channel)
 
     update_channel = client.get_channel(626063347854606337)
     news_channel = client.get_channel(626077658802946068)
@@ -48,7 +51,8 @@ async def on_message(message):
 
     # ensure that the boss is only active in its respective channel(s)
     if str(message.channel) != "botspam" and str(message.channel) != "request-roles" and \
-            str(message.channel) != "jokes-and-funny-stuff":
+            str(message.channel) != "jokes-and-funny-stuff" and \
+            str(message.channel) != "admin-commands":
         return
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -61,23 +65,14 @@ async def on_message(message):
                      "!family add <name>\n" \
                      "!family remove <name>\n" \
                      "\nUse the following commands to make and or delete toons:\n" \
-                     "!toons add <name> <family> <class> <level> <xp percentage>\n" \
-                     "!toons remove <name> <family>\n" \
-                     "!toons set level <name> <level> <xp percentage>\n" \
+                     "!toons add <family> <name> <class> <url>\n" \
+                     "!toons remove <family> <name>\n" \
+                     "The url must be a public bdoplanner character from which all character stats will be retrieved.\n" + \
                      "\nUse the following commands to get an overview of the toons for a given family:\n" \
-                     "!toons overview <family>\n" \
-                     "\nUse the following commands to set respective gear variables:\n" + \
-                     "!gear set <variable> <value> <toon>\n" + \
-                     "!gear set <ap> <aap> <dp> <toon>\n" + \
-                     "Variable can either be ap, aap or dp\n" + \
-                     "\nUse the following commands to set respective skill variables:\n" \
-                     "skill levels are represented in numerical form (aka apprentice 5 = 15)\n" + \
-                     "!skills set <variable> <value> <toon>\n" + \
+                     "!toons overview <family>\n" + \
+                     "!gear overview <family>\n" + \
                      "!skills overview <family>\n" + \
-                     "Variable can either be either one of the life skill professions\n" + \
-                     "\nUse the following commands to see the history for a given toon or family\n" \
-                     "!toonhistory <toon>\n" \
-                     "!familyhistory <family>\n" + \
+                     "!toon overview <toon>\n" + \
                      "\nUse the following commands to see the current timers:\n" + \
                      "!bosstimers <boss>" \
                      " (boss tag is optional, if no tag is given, the timers for all bosses will be given)\n" + \
@@ -124,25 +119,25 @@ async def on_message(message):
         elif message.content.startswith("!toons add "):
             arguments = message.content.split(" ")
             channel = message.channel
-            if len(arguments) == 8:
+            print(arguments)
+            if len(arguments) == 7:
                 arguments[-4] = arguments[-4] + " " + arguments[-3]
                 arguments.pop(-3)
-            if len(arguments) == 7:
-                toon_name = arguments[2]
-                toon_family = arguments[3]
+            if len(arguments) == 6:
+                toon_family = arguments[2]
+                toon_name = arguments[3]
                 toon_class = arguments[4]
-                level = arguments[5]
-                xp = arguments[6]
+                url = arguments[5]
                 user = message.author
-                if toon_class not in ["Warrior",     "Ranger",  "Sorceress", "Berserker",
-                                      "Valkyrie",    "Wizard",  "Witch",     "Tamer",
-                                      "Maehwa",      "Musa",    "Ninja",     "Kunoichi",
-                                      "Striker",     "Mystic",  "Lahn",      "Archer",
-                                      "Dark Knight", "Shai"]:
+                if toon_class not in ["Warrior", "Ranger", "Sorceress", "Berserker",
+                                      "Valkyrie", "Wizard", "Witch", "Tamer",
+                                      "Maehwa", "Musa", "Ninja", "Kunoichi",
+                                      "Striker", "Mystic", "Lahn", "Archer",
+                                      "Dark Knight", "Shai", "Guardian"]:
                     await channel.send("Error, that class does not exist. "
                                        "All classes need to start with capital letters.")
                     return
-                user_tracker.add_toon(user, toon_name, toon_family, toon_class, level, xp, channel)
+                user_tracker.add_toon(user, toon_name, toon_family, toon_class, url, channel)
             else:
                 await alert_for_incorrect_format(channel)
 
@@ -150,21 +145,10 @@ async def on_message(message):
             arguments = message.content.split(" ")
             channel = message.channel
             if len(arguments) == 4:
-                toon_name = arguments[2]
-                toon_family = arguments[3]
+                toon_family = arguments[2]
+                toon_name = arguments[3]
                 user = message.author
                 user_tracker.remove_toon(user, toon_name, toon_family, channel)
-            else:
-                await alert_for_incorrect_format(channel)
-
-        elif message.content.startswith("!toons set level "):
-            arguments = message.content.split(" ")
-            channel = message.channel
-            if len(arguments) == 6:
-                toon_name = arguments[-3]
-                toon_level = arguments[-2]
-                toon_xp_percentage = arguments[-1]
-                user_tracker.set_toon_level(channel, toon_name, toon_level, toon_xp_percentage)
             else:
                 await alert_for_incorrect_format(channel)
 
@@ -178,49 +162,11 @@ async def on_message(message):
                 await alert_for_incorrect_format(channel)
 
         # -----------------------------------------------------------------------------------------
-        # Gear commands
-        # these commands are al related to the gear database that is stored for each guild member
-        # these stats will be used to properly determine the stats of the guild members, as well
-        # as help us properly organise events, and notify the proper people for those events
-        # -----------------------------------------------------------------------------------------
-        elif message.content.startswith("!gear set "):
-            arguments = message.content.split(" ")
-            channel = message.channel
-            if len(arguments) == 5:
-                toon = arguments[-1]
-                value = arguments[-2]
-                variable = arguments[-3]
-                user_tracker.set_gear_variable(channel, value, toon, variable)
-            elif len(arguments) == 6:
-                toon = arguments[-1]
-                dp = arguments[-2]
-                aap = arguments[-3]
-                ap = arguments[-4]
-                user_tracker.set_gear_variable(channel, dp, toon, "dp")
-                user_tracker.set_gear_variable(channel, aap, toon, "aap")
-                user_tracker.set_gear_variable(channel, ap, toon, "ap")
-            else:
-                await alert_for_incorrect_format(channel)
-            return
-
-        # -----------------------------------------------------------------------------------------
         # Skill commands
         # these commands are al related to the skill database that is stored for each guild member
         # these stats will be used to list progress for each toon that is part of the guild
         # these stats can also be used to properly direct messages for events that require higher levels
         # -----------------------------------------------------------------------------------------
-        elif message.content.startswith("!skills set"):
-            arguments = message.content.split(" ")
-            channel = message.channel
-            if len(arguments) == 5:
-                toon = arguments[-1]
-                value = arguments[-2]
-                skill = arguments[-3]
-                user_tracker.set_skill_value(channel, value, toon, skill)
-            else:
-                await alert_for_incorrect_format(channel)
-            return
-
         elif message.content.startswith("!skills overview "):
             arguments = message.content.split(" ")
             channel = message.channel
@@ -229,32 +175,6 @@ async def on_message(message):
                 user_tracker.get_skill_overview(channel, toon_family)
             else:
                 await alert_for_incorrect_format(channel)
-
-        # -----------------------------------------------------------------------------------------
-        # History commands
-        # these commands let players access the history of their account/toons
-        # the history lists all changes in stats
-        # the history will list at most the 20 most recent events
-        # -----------------------------------------------------------------------------------------
-        elif message.content.startswith("!toonhistory "):
-            arguments = message.content.split(" ")
-            channel = message.channel
-            if len(arguments) == 2:
-                toon = arguments[1]
-                user_tracker.get_toon_history(toon, channel)
-            else:
-                await alert_for_incorrect_format(channel)
-            return
-
-        elif message.content.startswith("!familyhistory "):
-            arguments = message.content.split(" ")
-            channel = message.channel
-            if len(arguments) == 2:
-                family = arguments[1]
-                user_tracker.get_family_history(family, channel)
-            else:
-                await alert_for_incorrect_format(channel)
-            return
 
         # -----------------------------------------------------------------------------------------
         # Timer commands
@@ -321,7 +241,7 @@ async def on_message(message):
                      "Nouver\n" \
                      "Garmoth\n" \
                      "Quint/Muraka\n" \
-                     "Vell\n"\
+                     "Vell\n" \
                      "Having one of these boss roles will enable you to get notified whenever these bosses are " \
                      "60 min away from spawning, 30 min away from spawning, " \
                      "5 min away from spawning and when they have spawned.\n" \
@@ -338,7 +258,7 @@ async def on_message(message):
             arguments = message.content.split(" ")
             if len(arguments) == 2:
                 member = message.author
-                if arguments[1] in ["Kzarka", "Kutum",   "Karanda",          "Offin",
+                if arguments[1] in ["Kzarka", "Kutum", "Karanda", "Offin",
                                     "Nouver", "Garmoth", "Quint/Muraka", "Vell"]:
                     role = get(message.guild.roles, name=arguments[1])
                     await member.add_roles(role)
@@ -353,10 +273,11 @@ async def on_message(message):
             arguments = message.content.split(" ")
             if len(arguments) == 2:
                 member = message.author
-                if arguments[1] in ["Kzarka", "Kutum",   "Karanda",          "Offin",
+                if arguments[1] in ["Kzarka", "Kutum", "Karanda", "Offin",
                                     "Nouver", "Garmoth", "Quint/Muraka", "Vell"]:
                     role = get(message.guild.roles, name=arguments[1])
                     await member.remove_roles(role)
+                    await message.channel.send("Removed role {} from {}".format(arguments[1], message.author))
                 else:
                     await alert_for_incorrect_format(message.channel)
             else:
@@ -423,6 +344,42 @@ async def on_message(message):
             output = "Command not recognized, use !help to get a list of available commands!"
             await message.channel.send(output)
             return
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ADMIN ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    elif str(message.channel) == "admin-commands":
+        if message.content == "!weekly reset":
+            await message.channel.send(admin_commands.compute_payout_values())
+            return
+
+        elif message.content == "!renew":
+            arguments = message.content.split(" ")
+            if len(arguments) == 3:
+                admin_commands.register_renewal(arguments[1], arguments[2], message.channel)
+            else:
+                await alert_for_incorrect_format(message.channel)
+
+        elif message.content == "!register":
+            arguments = message.content.split(" ")
+            if len(arguments) == 3:
+                admin_commands.add_activity(arguments[1], arguments[2], message.channel)
+            else:
+                await alert_for_incorrect_format(message.channel)
+
+        elif message.content == "!help":
+            output = "This channel is used for admin commands.\n" \
+                     "!weekly reset\n" \
+                     "!renew <family> <current activity>\n" \
+                     "!register <family> <current activity>"
+            await message.channel.send(output)
+            return
+
+        elif message.content.startswith("!"):
+            output = "Command not recognized, use !help to get a list of available commands!"
+            await message.channel.send(output)
+            return
+
 
 async def alert_for_incorrect_format(channel):
     await channel.send("Incorrect format, use !help to check the available commands!")

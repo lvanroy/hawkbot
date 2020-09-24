@@ -7,28 +7,11 @@ persistence = Persistence()
 
 
 class GearTracker:
-    def set_dp(self, value, toon, channel):
-        condition = asyncio.ensure_future(self.check_if_integer(value, channel))
-        if condition:
-            if not persistence.check_if_toon_exists_in_gear(toon):
-                persistence.add_toon_to_gear(toon)
-            persistence.set_dp(toon, value)
-        return
-
-    def set_ap(self, value, toon, channel):
-        condition = asyncio.ensure_future(self.check_if_integer(value, channel))
-        if condition:
-            if not persistence.check_if_toon_exists_in_gear(toon):
-                persistence.add_toon_to_gear(toon)
-            persistence.set_ap(toon, value)
-        return
-
-    def set_aap(self, value, toon, channel):
-        condition = asyncio.ensure_future(self.check_if_integer(value, channel))
-        if condition:
-            if not persistence.check_if_toon_exists_in_gear(toon):
-                persistence.add_toon_to_gear(toon)
-            persistence.set_aap(toon, value)
+    @staticmethod
+    def set_gear_stats(toon, stats):
+        if not persistence.check_if_toon_exists_in_gear(toon):
+            persistence.add_toon_to_gear(toon)
+        persistence.set_gear_stats(toon, stats)
         return
 
     def get_stats(self, toon, channel):

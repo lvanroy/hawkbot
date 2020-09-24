@@ -1,11 +1,14 @@
 import re
 import asyncio
+import psycopg2.errors
 
 from Persistence import Persistence
-import psycopg2.errors
 from psycopg2.errorcodes import FOREIGN_KEY_VIOLATION
+from BdoPlannerAPI import get_stats_from_planner
+from GearTracker import GearTracker
 
 persistence = Persistence()
+geartracker = GearTracker()
 
 
 class UserTracker:
@@ -39,15 +42,17 @@ class UserTracker:
 
     # ~~~~~~~~~~~~~~~~~~~~ Toons ~~~~~~~~~~~~~~~~~~~~~~~~
     @staticmethod
-    def add_toon(user, toon, toon_family, toon_class, level, xp, channel):
+    def add_toon(user, toon, toon_family, toon_class, url, channel):
         if not persistence.check_if_toon_exists(toon):
             user_id = user.id
             if persistence.check_if_user_owns_family(user_id, toon_family):
                 try:
-                    persistence.add_toon(toon, toon_family, toon_class, level, xp)
+                    persistence.add_toon(toon, toon_family, toon_class, url)
                 except psycopg2.errors.lookup(FOREIGN_KEY_VIOLATION):
                     asyncio.ensure_future(channel.send("something went wrong while adding the toon, make sure you " +
                                                        "have added a family before adding a toon."))
+                stats = get_stats_from_planner(url)
+                geartracker.set_gear_stats(toon, stats)
                 if persistence.check_if_toon_exists(toon):
                     asyncio.ensure_future(channel.send("Succcess: this toon was successfully added."))
                 else:
@@ -89,27 +94,18 @@ class UserTracker:
         return list()
 
     @staticmethod
-    def set_toon_level(channel, toon, level, xp_percentage):
-        if persistence.check_if_toon_exists(toon):
-            persistence.set_toon_level(toon, level, xp_percentage)
-            result = persistence.get_toon_level(toon)
-            if str(result[0]) == level and float(result[1]) == float(xp_percentage):
-                asyncio.ensure_future(channel.send("Success: the level was successfully updated."))
-            else:
-                asyncio.ensure_future(channel.send("Error: something went wrong, please notify the bot owner."))
-        else:
-            asyncio.ensure_future(channel.send("Error: this toon does not exist."))
-
-    @staticmethod
     def get_toon_overview(channel, family):
         if persistence.check_if_family_exists(family):
             toons = persistence.get_toons(family)
             if len(toons) == 0:
                 asyncio.ensure_future(channel.send("Error: there are no toons registered with this family."))
             else:
-                output = "```========================================================\n"
-                output += "|toon            |class      |level|%      |ap |aap|dp |\n"
-                output += "========================================================\n"
+                output = "```==============================================================================" \
+                         "===================================\n"
+                output += "|toon            |class      |level|%      |ap |aap|dp |hap|dr |hdr|eva|heva|hp " \
+                          " |acc|acrit|da |dm |bap|baap|drr|\n"
+                output += "================================================================================" \
+                          "=================================\n"
                 for toon in toons:
                     condition = persistence.check_if_toon_exists_in_gear(toon[0])
                     output += "|" + toon[0] + ((16 - len(toon[0])) * ' ')
@@ -120,57 +116,43 @@ class UserTracker:
                         ap = persistence.get_gear_value(toon[0], "ap")
                         aap = persistence.get_gear_value(toon[0], "aap")
                         dp = persistence.get_gear_value(toon[0], "dp")
+                        hap = persistence.get_gear_value(toon[0], "hap")
+                        dr = persistence.get_gear_value(toon[0], "dr")
+                        hdr = persistence.get_gear_value(toon[0], "hdr")
+                        eva = persistence.get_gear_value(toon[0], "eva")
+                        heva = persistence.get_gear_value(toon[0], "heva")
+                        hp = persistence.get_gear_value(toon[0], "hp")
+                        acc = persistence.get_gear_value(toon[0], "acc")
+                        acrit = persistence.get_gear_value(toon[0], "acrit")
+                        da = persistence.get_gear_value(toon[0], "da")
+                        dm = persistence.get_gear_value(toon[0], "dm")
+                        bap = persistence.get_gear_value(toon[0], "bap")
+                        baap = persistence.get_gear_value(toon[0], "baap")
+                        drr = persistence.get_gear_value(toon[0], "drr")
                         output += "|" + str(ap) + ((3 - len(str(ap))) * ' ')
                         output += "|" + str(aap) + ((3 - len(str(aap))) * ' ')
                         output += "|" + str(dp) + ((3 - len(str(dp))) * ' ')
+                        output += "|" + str(hap) + ((3 - len(str(hap))) * ' ')
+                        output += "|" + str(dr) + ((3 - len(str(dr))) * ' ')
+                        output += "|" + str(hdr) + ((3 - len(str(hdr))) * ' ')
+                        output += "|" + str(eva) + ((3 - len(str(eva))) * ' ')
+                        output += "|" + str(heva) + ((4 - len(str(heva))) * ' ')
+                        output += "|" + str(hp) + ((4 - len(str(hp))) * ' ')
+                        output += "|" + str(acc) + ((3 - len(str(acc))) * ' ')
+                        output += "|" + str(acrit) + ((5 - len(str(acrit))) * ' ')
+                        output += "|" + str(da) + ((3 - len(str(da))) * ' ')
+                        output += "|" + str(dm) + ((3 - len(str(dm))) * ' ')
+                        output += "|" + str(bap) + ((3 - len(str(bap))) * ' ')
+                        output += "|" + str(baap) + ((4 - len(str(baap))) * ' ')
+                        output += "|" + str(drr) + ((3 - len(str(drr))) * ' ')
                     else:
-                        output += '|0  |0  |0  '
+                        output += '|0  |0  |0  |0  |0  |0  |0  |0   |0   |0  |0    |0  |0  |0  |0   |0  |'
                     output += "|\n"
-                output += "========================================================\n```"
+                output += "================================================================================" \
+                          "=================================\n```"
                 asyncio.ensure_future(channel.send(output))
         else:
             asyncio.ensure_future(channel.send("Error: that family name does not exist."))
-
-    # ~~~~~~~~~~~~~~~~~~~~ Gear ~~~~~~~~~~~~~~~~~~~~~~~~
-    def set_gear_variable(self, channel, value, toon, variable):
-        condition = self.check_if_integer(value)
-        if condition:
-            if not persistence.check_if_toon_exists(toon):
-                asyncio.ensure_future(channel.send("Error: this toon does not exist."))
-                return
-            if not persistence.check_if_toon_exists_in_gear(toon):
-                persistence.add_toon_to_gear(toon)
-            old_value = persistence.get_gear_value(toon, variable)
-            persistence.set_gear_value(toon, value, variable)
-            difference = int(value) - old_value
-            if difference != 0:
-                persistence.add_event(toon, "ap", difference)
-            if str(persistence.get_gear_value(toon, variable)) == value:
-                asyncio.ensure_future(channel.send("Success: ap was updated."))
-            else:
-                asyncio.ensure_future(channel.send("Error: something went wrong, please notify the bot owner."))
-        else:
-            asyncio.ensure_future(self.alert_for_incorrect_format(channel))
-        return
-
-    # ~~~~~~~~~~~~~~~~~~~ Skills ~~~~~~~~~~~~~~~~~~~~~~~~~
-    def set_skill_value(self, channel, value, toon, skill):
-        condition = self.check_if_integer(value)
-        if condition:
-            if not persistence.check_if_toon_exists(toon):
-                asyncio.ensure_future(channel.send("Error: this toon does not exist."))
-                return
-            if not persistence.check_if_toon_exists_in_skills(toon):
-                persistence.add_toon_to_skills(toon)
-            old_value = persistence.get_skill_value(toon, skill)
-            persistence.set_skill_value(toon, value, skill)
-            difference = int(value) - old_value
-            if difference != 0:
-                persistence.add_event(toon, skill, difference)
-            if str(persistence.get_skill_value(toon, skill)) == value:
-                asyncio.ensure_future(channel.send("Success: {} was updated.".format(skill)))
-            else:
-                asyncio.ensure_future(channel.send("Error: something went wrong, please notify the bot owner."))
 
     @staticmethod
     def get_skill_overview(channel, family):
