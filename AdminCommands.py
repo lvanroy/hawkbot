@@ -36,5 +36,8 @@ class AdminCommands:
 
         output = ""
         for result in results:
-            output += "{} level {}\n".format(result[0], (result[1] - min_act)/(max_act - min_act) * 9 + 1)
+            if max_act != min_act:
+                output += "{} level {}\n".format(result[0], (result[1] - min_act)/(max_act - min_act) * 9 + 1)
+            else:
+                output += "{} level {}\n".format(result[0], result[1])
         return output
