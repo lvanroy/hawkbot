@@ -19,7 +19,7 @@ user_tracker = UserTracker()
 
 client = discord.Client()
 
-bot_channel = client.get_channel(605023656132739110)
+bot_channel = client.get_channel(623893978273808404)
 initialise_timers(bot_channel)
 
 admin_commands = AdminCommands()
