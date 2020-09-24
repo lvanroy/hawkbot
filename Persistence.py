@@ -254,7 +254,7 @@ class Persistence:
 
     def register_renewal(self, family, current_activity):
         cursor = self.connection.cursor()
-        cursor.execute("SELECT activity from \"Activity\" WHERE family = E'{}'".format(family))
+        cursor.execute("SELECT activity from \"activity\" WHERE family = E'{}'".format(family))
         result = cursor.fetchone()
         cursor.execute("UPDATE \"activity\" set activity = {}, gained = {} WHERE family = E'{}'"
                        .format(current_activity, current_activity-result[0], family))
@@ -262,7 +262,7 @@ class Persistence:
 
     def get_weekly_activities(self):
         cursor = self.connection.cursor()
-        cursor.execute("SELECT family, gained from \"Activity\"")
+        cursor.execute("SELECT family, gained from \"activity\"")
         result = cursor.fetchall()
         cursor.execute("UPDATE \"activity\" set gained = 0")
         self.connection.commit()
