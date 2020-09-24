@@ -240,7 +240,7 @@ class Persistence:
     # ~~~~~~~~~~~~~~~~~~~~ Activity ~~~~~~~~~~~~~~~~~~~~
     def see_if_activity_exists(self, family):
         cursor = self.connection.cursor()
-        cursor.execute("SELECT * from \"Activity\" WHERE family = E'{}'".format(family))
+        cursor.execute("SELECT * from \"activity\" WHERE family = E'{}'".format(family))
         result = cursor.fetchone()
         if not result:
             return False
@@ -248,7 +248,7 @@ class Persistence:
 
     def add_activity(self, family, activity):
         cursor = self.connection.cursor()
-        cursor.execute("INSERT INTO \"Activity\" (family, activity, gained) VALUES (E'{}', {}, 0)"
+        cursor.execute("INSERT INTO \"activity\" (family, activity, gained) VALUES (E'{}', {}, 0)"
                        .format(family, activity))
         self.connection.commit()
 
@@ -256,7 +256,7 @@ class Persistence:
         cursor = self.connection.cursor()
         cursor.execute("SELECT activity from \"Activity\" WHERE family = E'{}'".format(family))
         result = cursor.fetchone()
-        cursor.execute("UPDATE \"Activity\" set activity = {}, gained = {} WHERE family = E'{}'"
+        cursor.execute("UPDATE \"activity\" set activity = {}, gained = {} WHERE family = E'{}'"
                        .format(current_activity, current_activity-result[0], family))
         self.connection.commit()
 
@@ -264,7 +264,7 @@ class Persistence:
         cursor = self.connection.cursor()
         cursor.execute("SELECT family, gained from \"Activity\"")
         result = cursor.fetchall()
-        cursor.execute("UPDATE \"Activity\" set gained = 0")
+        cursor.execute("UPDATE \"activity\" set gained = 0")
         self.connection.commit()
 
         return result
