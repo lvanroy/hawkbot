@@ -257,7 +257,7 @@ class Persistence:
         cursor.execute("SELECT activity, gained from \"activity\" WHERE family = E'{}'".format(family))
         result = cursor.fetchone()
         cursor.execute("UPDATE \"activity\" set activity = {}, gained = {} WHERE family = E'{}'"
-                       .format(current_activity, result[1] + current_activity-result[0], family))
+                       .format(current_activity, int(result[1]) + int(current_activity)-int(result[0]), family))
         self.connection.commit()
 
     def get_weekly_activities(self):
