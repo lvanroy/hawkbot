@@ -38,10 +38,10 @@ class AdminCommands:
         output = ""
         for result in results:
             if max_act != min_act:
-                output += "{} has gained a total of {} activity and has level {}\n"\
+                output += "{} gained {}, level {}\n"\
                     .format(result[0], result[1], int(ceil(result[1] - min_act)/(max_act - min_act) * 9 + 1))
             else:
-                output += "{} has gained a total of {} activity and has level {}\n".format(result[0], result[1], 1)
+                output += "{} gained {}, level {}\n".format(result[0], result[1], 1)
         return output
 
     @staticmethod
