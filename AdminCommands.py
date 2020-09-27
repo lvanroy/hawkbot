@@ -1,6 +1,7 @@
 import asyncio
 
 from Persistence import Persistence
+from math import ceil
 
 persistence = Persistence()
 
@@ -37,9 +38,10 @@ class AdminCommands:
         output = ""
         for result in results:
             if max_act != min_act:
-                output += "{} level {}\n".format(result[0], (result[1] - min_act)/(max_act - min_act) * 9 + 1)
+                output += "{} has gained a total of {} activity and has level {}\n"\
+                    .format(result[0], result[1], int(ceil(result[1] - min_act)/(max_act - min_act) * 9 + 1))
             else:
-                output += "{} level {}\n".format(result[0], 1)
+                output += "{} has gained a total of {} activity and has level {}\n".format(result[0], result[1], 1)
         return output
 
     @staticmethod
