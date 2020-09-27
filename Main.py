@@ -80,9 +80,19 @@ async def on_message(message):
                      "!dice <lower> <upper> (these bounds are optional)\n" + \
                      "!praise\n!praisebot\n" + \
                      "\nthe following command gives a link to the bots github:\n" + \
-                     "!github"
+                     "!github" \
+                     "\nthe following command allows you to get an overview of payout levels for the current week:\n" \
+                     "!payout"
 
             await message.channel.send(output)
+            return
+
+        # -----------------------------------------------------------------------------------------
+        # Payout commands
+        # commands related to payout levels
+        # -----------------------------------------------------------------------------------------
+        elif message.content == "!payout":
+            await message.channel.send(admin_commands.compute_payout_values())
             return
 
         # -----------------------------------------------------------------------------------------
@@ -351,6 +361,7 @@ async def on_message(message):
     elif str(message.channel) == "admin-commands":
         if message.content == "!weekly reset":
             await message.channel.send(admin_commands.compute_payout_values())
+            admin_commands.reset_tracker()
             return
 
         elif message.content.startswith("!renew"):

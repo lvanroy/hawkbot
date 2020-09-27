@@ -41,3 +41,8 @@ class AdminCommands:
             else:
                 output += "{} level {}\n".format(result[0], 1)
         return output
+
+    @staticmethod
+    def reset_tracker():
+        persistence.reset_tracker()
+        return

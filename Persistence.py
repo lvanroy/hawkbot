@@ -83,7 +83,7 @@ class Persistence:
         result = cursor.fetchall()
         return result
 
-    def set_toon_level(self, toon ,level, xp_percentage):
+    def set_toon_level(self, toon, level, xp_percentage):
         cursor = self.connection.cursor()
         cursor.execute("UPDATE \"toons\" set level={}, xp={} where name = '{}'"
                        .format(level, xp_percentage, toon))
@@ -257,17 +257,20 @@ class Persistence:
         cursor.execute("SELECT activity, gained from \"activity\" WHERE family = E'{}'".format(family))
         result = cursor.fetchone()
         cursor.execute("UPDATE \"activity\" set activity = {}, gained = {} WHERE family = E'{}'"
-                       .format(current_activity, int(result[1]) + int(current_activity)-int(result[0]), family))
+                       .format(current_activity, int(result[1]) + int(current_activity) - int(result[0]), family))
         self.connection.commit()
 
     def get_weekly_activities(self):
         cursor = self.connection.cursor()
         cursor.execute("SELECT family, gained from \"activity\"")
         result = cursor.fetchall()
-        cursor.execute("UPDATE \"activity\" set gained = 0")
-        self.connection.commit()
 
         return result
+
+    def reset_tracker(self):
+        cursor = self.connection.cursor()
+        cursor.execute("UPDATE \"activity\" set gained = 0")
+        self.connection.commit()
 
     # ~~~~~~~~~~~~~~~~~~~~ General ~~~~~~~~~~~~~~~~~~~~
 
