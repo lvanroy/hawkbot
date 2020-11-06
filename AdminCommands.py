@@ -38,8 +38,26 @@ class AdminCommands:
         output = ""
         for result in results:
             if max_act != min_act:
-                output += "{} gained {}, level {}\n"\
-                    .format(result[0], result[1], int(ceil(result[1] - min_act)/(max_act - min_act) * 9 + 1))
+                if result[1] < 0.05 * max_act:
+                    output += "{} gained {}, level {}\n".format(result[0], result[1], 1)
+                elif result[1] < 0.1 * max_act:
+                    output += "{} gained {}, level {}\n".format(result[0], result[1], 2)
+                elif result[1] < 0.2 * max_act:
+                    output += "{} gained {}, level {}\n".format(result[0], result[1], 3)
+                elif result[1] < 0.2 * max_act:
+                    output += "{} gained {}, level {}\n".format(result[0], result[1], 4)
+                elif result[1] < 0.2 * max_act:
+                    output += "{} gained {}, level {}\n".format(result[0], result[1], 5)
+                elif result[1] < 0.2 * max_act:
+                    output += "{} gained {}, level {}\n".format(result[0], result[1], 6)
+                elif result[1] < 0.2 * max_act:
+                    output += "{} gained {}, level {}\n".format(result[0], result[1], 7)
+                elif result[1] < 0.2 * max_act:
+                    output += "{} gained {}, level {}\n".format(result[0], result[1], 8)
+                elif result[1] < 0.2 * max_act:
+                    output += "{} gained {}, level {}\n".format(result[0], result[1], 9)
+                else:
+                    output += "{} gained {}, level {}\n".format(result[0], result[1], 10)
             else:
                 output += "{} gained {}, level {}\n".format(result[0], result[1], 1)
         return output
