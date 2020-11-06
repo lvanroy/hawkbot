@@ -19,9 +19,6 @@ user_tracker = UserTracker()
 
 client = discord.Client()
 
-bot_channel = client.get_channel(623893978273808404)
-initialise_timers(bot_channel)
-
 admin_commands = AdminCommands()
 
 
@@ -32,6 +29,9 @@ async def on_ready():
 
     if not path.exists("../skraper-master/cli/target"):
         system('cd ../skraper-master;./mvnw clean package -DskipTests=true ')
+        
+    bot_channel = client.get_channel(623893978273808404)
+    initialise_timers(bot_channel)
 
     update_channel = client.get_channel(626063347854606337)
     news_channel = client.get_channel(626077658802946068)
