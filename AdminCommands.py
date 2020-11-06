@@ -44,17 +44,17 @@ class AdminCommands:
                     output += "{} gained {}, level {}\n".format(result[0], result[1], 2)
                 elif result[1] < 0.2 * max_act:
                     output += "{} gained {}, level {}\n".format(result[0], result[1], 3)
-                elif result[1] < 0.2 * max_act:
+                elif result[1] < 0.3 * max_act:
                     output += "{} gained {}, level {}\n".format(result[0], result[1], 4)
-                elif result[1] < 0.2 * max_act:
+                elif result[1] < 0.4 * max_act:
                     output += "{} gained {}, level {}\n".format(result[0], result[1], 5)
-                elif result[1] < 0.2 * max_act:
+                elif result[1] < 0.5 * max_act:
                     output += "{} gained {}, level {}\n".format(result[0], result[1], 6)
-                elif result[1] < 0.2 * max_act:
+                elif result[1] < 0.6 * max_act:
                     output += "{} gained {}, level {}\n".format(result[0], result[1], 7)
-                elif result[1] < 0.2 * max_act:
+                elif result[1] < 0.7 * max_act:
                     output += "{} gained {}, level {}\n".format(result[0], result[1], 8)
-                elif result[1] < 0.2 * max_act:
+                elif result[1] < 0.8 * max_act:
                     output += "{} gained {}, level {}\n".format(result[0], result[1], 9)
                 else:
                     output += "{} gained {}, level {}\n".format(result[0], result[1], 10)
