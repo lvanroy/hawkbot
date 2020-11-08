@@ -1,5 +1,5 @@
 from threading import Timer
-from datetime import datetime
+from datetime import datetime, timedelta
 from math import floor
 
 import time
@@ -353,7 +353,7 @@ async def print_timers(spamchannel, boss=None):
 
 
 def get_curent_time():
-    now = datetime.now()
+    now = datetime.utcnow() - timedelta(hours=1)
     weekday = now.weekday()*24*60*60
     hours = (int(now.strftime("%H"))+2)*60*60
     minutes = int(now.strftime("%M"))*60
