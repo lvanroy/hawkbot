@@ -73,6 +73,6 @@ CREATE TABLE Activity(
     family VARCHAR PRIMARY KEY,
     activity INT NOT NULL,
     gained INT NOT NULL
-)
+);
 
 COMMIT;
