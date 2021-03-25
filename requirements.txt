@@ -5,3 +5,6 @@ requests
 bs4
 selenium
 webdriver-manager
+google_spreadsheet
+google-auth-oauthlib
+pandas

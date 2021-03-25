@@ -6,7 +6,7 @@ from BossTimers import initialise_timers, print_timers
 from UserTracker import UserTracker
 from UpdateTracker import initialise_update_tracker
 from Distractions import get_joke_categories, get_joke, get_meme
-from AdminCommands import AdminCommands
+from Activity import Activity
 
 from os import system, path
 
@@ -19,7 +19,7 @@ user_tracker = UserTracker()
 
 client = discord.Client()
 
-admin_commands = AdminCommands()
+admin_commands = Activity()
 
 
 @client.event
