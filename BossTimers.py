@@ -191,7 +191,7 @@ kzarka = [18000,  32400,  80100,  104400, 173700,
 offin = [43200, 230400, 439200]
 nouver = [68400,  144000, 260100, 277200, 302400,
           352800, 403200, 450000, 475200, 519300,
-          561600, 598500]
+          550800, 598500]
 garmoth = [166500, 339300, 586800]
 quint_and_muraka = [256500, 489600]
 vell = [576000]
@@ -353,7 +353,7 @@ async def print_timers(spamchannel, boss=None):
 
 
 def get_curent_time():
-    now = datetime.utcnow() - timedelta(hours=1)
+    now = datetime.utcnow()
     weekday = now.weekday()*24*60*60
     hours = (int(now.strftime("%H"))+2)*60*60
     minutes = int(now.strftime("%M"))*60

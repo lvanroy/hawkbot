@@ -33,9 +33,9 @@ async def on_ready():
     bot_channel = client.get_channel(623893978273808404)
     initialise_timers(bot_channel)
 
-    update_channel = client.get_channel(626063347854606337)
-    news_channel = client.get_channel(626077658802946068)
-    initialise_update_tracker(news_channel, update_channel)
+    # update_channel = client.get_channel(626063347854606337)
+    # news_channel = client.get_channel(626077658802946068)
+    # initialise_update_tracker(news_channel, update_channel)
 
     global user_tracker
     user_tracker = UserTracker()
@@ -92,7 +92,16 @@ async def on_message(message):
         # commands related to payout levels
         # -----------------------------------------------------------------------------------------
         elif message.content == "!payout":
-            await message.channel.send(admin_commands.compute_payout_values())
+            output = ""
+            counter = 0
+            for line in admin_commands.compute_payout_values().split("\n"):
+                output += line + "\n"
+                counter += 1
+                if counter == 30:
+                    await message.channel.send(output)
+                    output = ""
+                    counter = 0
+            await message.channel.send(output)
             return
 
         # -----------------------------------------------------------------------------------------
@@ -360,7 +369,16 @@ async def on_message(message):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     elif str(message.channel) == "admin-commands":
         if message.content == "!weekly reset":
-            await message.channel.send(admin_commands.compute_payout_values())
+            output = ""
+            counter = 0
+            for line in admin_commands.compute_payout_values().split("\n"):
+                output += line + "\n"
+                counter += 1
+                if counter == 30:
+                    await message.channel.send(output)
+                    output = ""
+                    counter = 0
+            await message.channel.send(output)
             admin_commands.reset_tracker()
             return
 

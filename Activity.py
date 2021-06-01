@@ -52,6 +52,8 @@ class Activity:
         self.df['Current activity'] = self.df['Current activity'].astype(int)
         self.df['Past activity'] = self.df['Past activity'].astype(int)
 
+        self.df['Family name'] = self.df['Family name'].str.lower()
+
     def write_df(self):
         cred = None
         self.df = self.df.sort_values(['Family name'])
@@ -87,6 +89,7 @@ class Activity:
             print(e)
 
     def compute_payout_values(self):
+        self.update_df()
         min_act = None
         max_act = None
             
@@ -105,7 +108,7 @@ class Activity:
             dif = int(row['Current activity']) - int(row['Past activity'])
             if min_act != max_act:
                 if dif < 0.05 * max_act:
-                    output += "{} gained {}, level {}\n".format(row['Family name'], dif, 1)
+                    continue
                 elif dif < 0.1 * max_act:
                     output += "{} gained {}, level {}\n".format(row['Family name'], dif, 2)
                 elif dif < 0.2 * max_act:
@@ -130,9 +133,10 @@ class Activity:
         return output
 
     def add_activity(self, family, current_activity, channel):
+        self.update_df()
         if family not in self.df['Family name'].tolist():
             self.df = self.df.append(
-                pd.DataFrame([[family, current_activity, current_activity]], columns=COLUMNS),
+                pd.DataFrame([[family.lower(), current_activity, current_activity]], columns=COLUMNS),
                 ignore_index=True
             )
             self.write_df()
@@ -140,16 +144,14 @@ class Activity:
             asyncio.ensure_future(channel.send('Error: this family already exists'))
 
     def register_renewal(self, family, current_activity, channel):
-        if family in self.df['Family name'].tolist():
-            self.df.loc[(self.df['Family name'] == family)].replace(
-                {
-                    int(self.df.loc[(self.df['Family name'] == family)]['Past activity']): current_activity
-                }
-            )
+        self.update_df()
+        if family.lower() in self.df['Family name'].tolist():
+            self.df.loc[self.df['Family name'] == family.lower(), 'Current activity'] = int(current_activity)
             self.write_df()
         else:
             asyncio.ensure_future(channel.send('Error: this family does not exist'))
 
     def reset_tracker(self):
+        self.update_df()
         self.df['Past activity'] = self.df['Current activity']
         self.write_df()
